@@ -28,15 +28,33 @@ def get_parser() -> NLParser:
     return NLParser()
 
 @app.command()
-def add(text: str):
-    """Add a new task using natural language."""
+def add(
+    text: str,
+    priority: Optional[Priority] = typer.Option(None, help="Explicitly set priority"),
+    due: Optional[str] = typer.Option(None, help="Explicitly set due date")
+):
+    """Add a new task using natural language or explicit flags."""
     tm = get_task_manager()
     parser = get_parser()
+    
+    # 1. Parse natural language
     parsed_data = parser.parse(text)
+    
+    # 2. Apply explicit overrides
+    final_priority = priority if priority else parsed_data["priority"]
+    
+    final_due = parsed_data.get("due_date")
+    if due:
+        parsed_explicit_due = dateparser.parse(due, settings={'PREFER_DATES_FROM': 'future'})
+        if parsed_explicit_due:
+            final_due = parsed_explicit_due
+        else:
+            console.print(f"[yellow]Warning: Could not parse due date '{due}'. Using NLP result if available.[/yellow]")
+
     new_task = Task(
         title=parsed_data["title"],
-        due_date=parsed_data.get("due_date"),
-        priority=parsed_data["priority"],
+        due_date=final_due,
+        priority=final_priority,
         category=parsed_data.get("category")
     )
     tm.add_task(new_task)
@@ -134,6 +152,15 @@ def complete(task_id: str):
     tm = get_task_manager()
     if tm.complete_task(task_id):
         console.print(f"[green]Task {task_id} marked as completed.[/green]")
+    else:
+        console.print(f"[red]Task {task_id} not found.[/red]")
+
+@app.command()
+def delete(task_id: str):
+    """Delete a task permanently."""
+    tm = get_task_manager()
+    if tm.delete_task(task_id):
+        console.print(f"[green]Task {task_id} deleted.[/green]")
     else:
         console.print(f"[red]Task {task_id} not found.[/red]")
 
