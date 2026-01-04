@@ -35,8 +35,12 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
     }
 
     return response;
-  } catch (error) {
-    // Log the full error to the console for easier debugging
+  } catch (error: any) {
+    if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
+      console.error(`[Connection Error] Could not reach the API at ${url}. Is the backend server running?`);
+      throw new Error('Connection to the server failed. Please ensure the backend is running.');
+    }
+    
     console.error(`[API Error] Failed to fetch: ${url}`, error);
     throw error;
   }

@@ -5,6 +5,19 @@ $backendPath = Join-Path $root "backend"
 $frontendPath = Join-Path $root "frontend"
 $venvPython = Join-Path $backendPath "venv\Scripts\python.exe"
 
+# 0. Clean up existing processes
+Write-Host "Cleaning up existing processes on ports 8000 and 3000..." -ForegroundColor Yellow
+$backendProc = Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue
+if ($backendProc) {
+    Stop-Process -Id $backendProc.OwningProcess -Force -ErrorAction SilentlyContinue
+    Write-Host "Stopped existing backend process."
+}
+$frontendProc = Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue
+if ($frontendProc) {
+    Stop-Process -Id $frontendProc.OwningProcess -Force -ErrorAction SilentlyContinue
+    Write-Host "Stopped existing frontend process."
+}
+
 # 1. Backend Setup
 Write-Host "Setting up Backend..." -ForegroundColor Yellow
 Set-Location $backendPath
@@ -24,6 +37,8 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host "Starting Backend Server..." -ForegroundColor Green
 # Start Uvicorn using the venv python
+# Use Start-Process with -NoNewWindow to keep output in view if desired, 
+# but for a "background" feel we'll keep it as is but add log redirection.
 Start-Process -FilePath $venvPython -ArgumentList "-m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload" -WorkingDirectory $backendPath
 
 # 2. Frontend Setup
@@ -40,7 +55,7 @@ if (-not (Test-Path "node_modules")) {
 }
 
 Write-Host "Starting Frontend Server..." -ForegroundColor Green
-# Use cmd /c for npm on Windows as it's often a script (npm.cmd or npm.ps1)
+# Use cmd /c for npm on Windows
 Start-Process -FilePath "cmd" -ArgumentList "/c npm run dev" -WorkingDirectory $frontendPath
 
 # 3. Launch
@@ -70,3 +85,5 @@ if ($frontendListening) {
 Start-Process "http://localhost:3000"
 
 Write-Host "Done! The servers are running in separate windows." -ForegroundColor Green
+Write-Host "If you encounter 'Failed to fetch', please ensure the backend window is still open and running." -ForegroundColor White
+
