@@ -1,0 +1,21 @@
+Database connected and initialized successfully.
+INFO:     127.0.0.1:57737 - "GET /ping HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58783 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58783 - "GET /api/v1/tasks/ HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58783 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58783 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58783 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60193 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58783 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56340 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56340 - "POST /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56340 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59041 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55683 - "OPTIONS /api/v1/tasks/44f2ca2b-429e-419e-a903-e867a99ebf0a HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55683 - "PATCH /api/v1/tasks/44f2ca2b-429e-419e-a903-e867a99ebf0a HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61140 - "OPTIONS /api/v1/tasks/44f2ca2b-429e-419e-a903-e867a99ebf0a HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61140 - "DELETE /api/v1/tasks/44f2ca2b-429e-419e-a903-e867a99ebf0a HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56548 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56548 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56548 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57457 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
