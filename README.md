@@ -99,20 +99,28 @@ This project uses `pytest` for testing. To run the test suite:
 pytest
 ```
 
-## 📂 Project Structure
+## 🌐 Web Dashboard (Professional Edition)
 
-```
-TO-DO-List-Hackathon/
-├── requirements.txt    # Python dependencies
-├── src/
-│   ├── main.py         # Application entry point
-│   ├── cli/            # CLI command definitions
-│   ├── core/           # Core logic (Config, Persistence, TaskManager)
-│   ├── models/         # Data models (Task)
-│   └── skills/         # AI/NLP capabilities (NLP parsing, Clustering)
-├── tests/              # Unit and integration tests
-└── specs/              # Feature specifications and documentation
-```
+The project now includes a formal, professional web interface with a high-end SaaS aesthetic.
+
+### 🛠️ Backend Setup (FastAPI)
+1. Navigate to the `backend` directory: `cd backend`
+2. Install dependencies: `pip install -r requirements.txt`
+3. Start the API server: `fastapi dev app/main.py`
+   * The API will run at `http://127.0.0.1:8000`
+   * Local SQLite database is used by default for guaranteed local functionality.
+
+### 🎨 Frontend Setup (Next.js)
+1. Navigate to the `frontend` directory: `cd frontend`
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
+4. Open `http://localhost:3000` in your browser.
+
+**Features:**
+*   **Professional SaaS Design**: Clean, vibrant Indigo theme with a sidebar dashboard.
+*   **Secure Authentication**: Full Sign-in/Sign-up flow with JWT protection.
+*   **Smart Task Management**: Create, update, and organize tasks with a beautiful UI.
+*   **Responsive Layout**: Fully functional on desktop and mobile.
 
 ## 🤝 Contributing
 

@@ -1,0 +1,40 @@
+Database connected and initialized successfully.
+INFO:     127.0.0.1:49277 - "GET /ping HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58207 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58207 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58207 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64737 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62474 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62474 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59100 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62474 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49551 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53731 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53731 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55215 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55215 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62153 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62153 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53396 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53396 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61454 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61454 - "POST /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61454 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60959 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49369 - "OPTIONS /api/v1/tasks/c74a1790-a8ed-480c-97b7-990d8afb0487 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49369 - "DELETE /api/v1/tasks/c74a1790-a8ed-480c-97b7-990d8afb0487 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50495 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50495 - "POST /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50495 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49938 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58998 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58998 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49963 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49963 - "POST /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49963 - "OPTIONS /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64228 - "GET /api/v1/tasks/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60528 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60528 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62199 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62199 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62199 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
