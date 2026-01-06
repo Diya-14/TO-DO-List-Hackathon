@@ -22,9 +22,8 @@ if ($LASTEXITCODE -ne 0) {
     exit 
 }
 
-Write-Host "Starting Backend Server..." -ForegroundColor Green
-# Start Uvicorn using the venv python
-Start-Process -FilePath $venvPython -ArgumentList "-m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload" -WorkingDirectory $backendPath
+# Backend server is now started by npm run dev
+# Start-Process -FilePath $venvPython -ArgumentList "-m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload" -WorkingDirectory $backendPath
 
 # 2. Frontend Setup
 Write-Host "Setting up Frontend..." -ForegroundColor Yellow
@@ -39,7 +38,7 @@ if (-not (Test-Path "node_modules")) {
     }
 }
 
-Write-Host "Starting Frontend Server..." -ForegroundColor Green
+Write-Host "Starting App (Frontend + Backend)..." -ForegroundColor Green
 # Use cmd /c for npm on Windows as it's often a script (npm.cmd or npm.ps1)
 Start-Process -FilePath "cmd" -ArgumentList "/c npm run dev" -WorkingDirectory $frontendPath
 
