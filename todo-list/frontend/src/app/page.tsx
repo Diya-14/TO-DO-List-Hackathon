@@ -58,8 +58,9 @@ export default function Home() {
         const errData = await res.json().catch(() => ({}));
         console.error('Server error:', errData);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Network or Connection error:', error);
+      showToast(error.message || "Connection to server failed. Please check if the backend is running.", "error");
     } finally {
       setLoading(false);
     }

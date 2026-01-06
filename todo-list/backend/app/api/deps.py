@@ -34,9 +34,23 @@ def get_current_user(
         
     try:
         import uuid
-        user_id = uuid.UUID(token_data)
+        print(f"DEBUG: Token data (sub): {token_data} (type: {type(token_data)})")
+        
+        # Ensure token_data is a valid UUID string
+        try:
+            user_id = uuid.UUID(str(token_data))
+            print(f"DEBUG: Converted user_id: {user_id} (type: {type(user_id)})")
+        except ValueError:
+            print(f"DEBUG: Invalid UUID format for token: {token_data}")
+            raise credentials_exception
+
+        # Explicitly ensure it's a UUID object, though uuid.UUID() returns one.
         user = session.get(User, user_id)
-    except (ValueError, TypeError):
+        
+    except Exception as e:
+        print(f"DEBUG: Error in session.get(User): {e}")
+        import traceback
+        traceback.print_exc()
         raise credentials_exception
 
     if not user:
