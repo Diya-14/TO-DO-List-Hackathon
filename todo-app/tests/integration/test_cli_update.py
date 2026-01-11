@@ -1,6 +1,6 @@
 import pytest
 from typer.testing import CliRunner
-from src.main import app
+from cli.main import app
 
 runner = CliRunner()
 
@@ -16,7 +16,7 @@ def test_cli_update_basic(clean_cli):
     time.sleep(1)
     
     # Get ID
-    from src.cli import commands
+    from cli import commands
     tm = commands.get_task_manager()
     tasks = tm.list_tasks()
     task_id = tasks[0].id[:8]
@@ -32,7 +32,7 @@ def test_cli_update_basic(clean_cli):
 
 def test_cli_update_nlp_priority(clean_cli):
     runner.invoke(app, ["add", "Test Task"])
-    from src.cli import commands
+    from cli import commands
     tm = commands.get_task_manager()
     task_id = tm.list_tasks()[0].id[:8]
     
@@ -44,7 +44,7 @@ def test_cli_update_nlp_priority(clean_cli):
 
 def test_cli_update_options_override(clean_cli):
     runner.invoke(app, ["add", "Test Task"])
-    from src.cli import commands
+    from cli import commands
     tm = commands.get_task_manager()
     task_id = tm.list_tasks()[0].id[:8]
     
@@ -55,8 +55,8 @@ def test_cli_update_options_override(clean_cli):
     assert updated.priority == "low"
 
 def test_cli_update_ambiguous_error(clean_cli):
-    from src.models.task import Task
-    from src.cli import commands
+    from cli.models.task import Task
+    from cli import commands
     tm = commands.get_task_manager()
     t1 = Task(id="abcdef12-1111", title="Task 1")
     t2 = Task(id="abcdef12-2222", title="Task 2")

@@ -1,8 +1,8 @@
 import pytest
 from typer.testing import CliRunner
-from src.main import app
-from src.core.persistence import PersistenceManager
-from src.models.task import Task, Priority
+from cli.main import app
+from cli.core.persistence import PersistenceManager
+from cli.models.task import Task, Priority
 
 runner = CliRunner()
 

@@ -1,7 +1,7 @@
 import pytest
 from typer.testing import CliRunner
-from src.main import app
-from src.core.persistence import PersistenceManager
+from cli.main import app
+from cli.core.persistence import PersistenceManager
 
 runner = CliRunner()
 

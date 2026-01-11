@@ -1,6 +1,6 @@
 import pytest
 from typer.testing import CliRunner
-from src.main import app
+from cli.main import app
 import re
 
 runner = CliRunner()

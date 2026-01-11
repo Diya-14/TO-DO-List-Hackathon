@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
-from src.skills.nlp import NLParser
-from src.models.task import Priority
+from cli.skills.nlp import NLParser
+from cli.models.task import Priority
 
 def test_parse_simple_task():
     parser = NLParser()

@@ -39,7 +39,7 @@ A smart, offline-first Command Line Interface (CLI) Todo application designed fo
 
 ## 📖 Usage
 
-The application is run via the `src/main.py` script.
+The application is run via the `cli/main.py` script.
 
 ### Adding Tasks
 Add a task using natural language. The system will try to extract due dates and priorities.
@@ -103,18 +103,20 @@ pytest
 
 The project now includes a formal, professional web interface with a high-end SaaS aesthetic.
 
-### 🛠️ Backend Setup (FastAPI)
-1. Navigate to the `backend` directory: `cd backend`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Start the API server: `fastapi dev app/main.py`
-   * The API will run at `http://127.0.0.1:8000`
-   * Local SQLite database is used by default for guaranteed local functionality.
+### 🚀 Quick Start (Single Command)
+The easiest way to run the application (Frontend + Backend + Database) is via the frontend.
 
-### 🎨 Frontend Setup (Next.js)
 1. Navigate to the `frontend` directory: `cd frontend`
-2. Install dependencies: `npm install`
-3. Start the development server: `npm run dev`
-4. Open `http://localhost:3000` in your browser.
+2. Install dependencies (first time only): `npm install`
+3. Start the application: `npm run dev`
+   * This command **automatically starts both** the Next.js frontend and the FastAPI backend.
+   * Frontend: `http://localhost:3000`
+   * Backend: `http://127.0.0.1:8000` (running in background)
+
+### 🛠️ Manual Setup (Optional)
+If you prefer to run them separately:
+*   **Backend**: `cd backend`, then `venv\Scripts\python -m uvicorn app.main:app --reload`
+*   **Frontend**: `cd frontend`, then `npm run next-dev`
 
 **Features:**
 *   **Professional SaaS Design**: Clean, vibrant Indigo theme with a sidebar dashboard.

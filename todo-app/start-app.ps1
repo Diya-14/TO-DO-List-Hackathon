@@ -1,9 +1,11 @@
 Write-Host "Starting HackDo Setup & Launch..." -ForegroundColor Cyan
 
-$root = Get-Location
+$root = $PSScriptRoot
 $backendPath = Join-Path $root "backend"
 $frontendPath = Join-Path $root "frontend"
 $venvPython = Join-Path $backendPath "venv\Scripts\python.exe"
+
+$env:PYTHONUTF8 = "1"
 
 # 1. Backend Setup
 Write-Host "Setting up Backend..." -ForegroundColor Yellow
@@ -40,13 +42,14 @@ if (-not (Test-Path "node_modules")) {
 
 Write-Host "Starting App (Frontend + Backend)..." -ForegroundColor Green
 # Use cmd /c for npm on Windows as it's often a script (npm.cmd or npm.ps1)
-Start-Process -FilePath "cmd" -ArgumentList "/c npm run dev" -WorkingDirectory $frontendPath
+Start-Process -FilePath "cmd" -ArgumentList "/k npm run dev" -WorkingDirectory $frontendPath
 
 # 3. Launch
 Set-Location $root
 Write-Host "Application is starting!" -ForegroundColor Cyan
-Write-Host "Backend API: http://127.0.0.1:8000"
+Write-Host "Backend API: http://localhost:8000"
 Write-Host "Frontend UI: http://localhost:3000"
+Write-Host "CLI Tool:    python todo-app/cli/main.py"
 Write-Host "Waiting 15 seconds for servers to warm up..."
 Start-Sleep -Seconds 15
 

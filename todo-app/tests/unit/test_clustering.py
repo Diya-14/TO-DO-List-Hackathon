@@ -1,6 +1,6 @@
 import pytest
-from src.skills.clustering import TaskClusterer
-from src.models.task import Task
+from cli.skills.clustering import TaskClusterer
+from cli.models.task import Task
 
 def test_cluster_tasks_basic():
     clusterer = TaskClusterer()

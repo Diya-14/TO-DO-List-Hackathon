@@ -7,9 +7,9 @@ root = Path(__file__).parent.parent.parent
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
-from src.core.persistence import PersistenceManager
-from src.core.task_manager import TaskManager
-from src.core.config import ConfigManager
+from cli.core.persistence import PersistenceManager
+from cli.core.task_manager import TaskManager
+from cli.core.config import ConfigManager
 
 @pytest.fixture
 def clean_cli(monkeypatch, tmp_path):

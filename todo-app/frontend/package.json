@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -n \"NEXT,API\" -c \"auto,blue\" \"npm:next-dev\" \"npm:backend\"",
+    "dev": "concurrently -n \"NEXT,API\" -c \"auto,blue\" \"npm:next-dev\" \"cd ../backend && venv\\Scripts\\python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload\"",
     "next-dev": "next dev",
-    "backend": "set PYTHONUTF8=1&& cd ../backend && venv\\Scripts\\python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload",
     "build": "next build",
-    "start": "next start",
+    "start": "concurrently -n \"NEXT,API\" -c \"auto,blue\" \"npm:next-start\" \"cd ../backend && venv\\Scripts\\python -m uvicorn app.main:app --host 0.0.0.0 --port 8000\"",
+    "next-start": "next start",
     "lint": "eslint"
   },
   "dependencies": {

@@ -1,18 +1,18 @@
 import pytest
 from typer.testing import CliRunner
-from src.main import app
-from src.core.persistence import PersistenceManager
-from src.core.config import ConfigManager
+from cli.main import app
+from cli.core.persistence import PersistenceManager
+from cli.core.config import ConfigManager
 
 runner = CliRunner()
 
 @pytest.fixture
 def mock_persistence(monkeypatch, tmp_path):
     db_file = tmp_path / "test_todo_organize.json"
-    monkeypatch.setattr("src.cli.commands.config.get_db_path", lambda: db_file)
-    from src.cli import commands
+    monkeypatch.setattr("cli.commands.config.get_db_path", lambda: db_file)
+    from cli import commands
     commands.persistence = PersistenceManager(file_path=str(db_file))
-    from src.core.task_manager import TaskManager
+    from cli.core.task_manager import TaskManager
     commands.task_manager = TaskManager(commands.persistence)
     return db_file
 

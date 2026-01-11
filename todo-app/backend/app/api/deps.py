@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -33,8 +34,12 @@ def get_current_user(
         raise credentials_exception
         
     try:
-        import uuid
-        user_id = uuid.UUID(token_data)
+        # Ensure we are passing a UUID object to session.get
+        # This prevents AttributeError in PostgreSQL if a string is passed
+        user_id = token_data
+        if isinstance(user_id, str):
+            user_id = uuid.UUID(user_id)
+        
         user = session.get(User, user_id)
     except (ValueError, TypeError):
         raise credentials_exception

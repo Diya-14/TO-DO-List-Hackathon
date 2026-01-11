@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timedelta
-from src.models.task import Task, Priority, Status, Project
+from cli.models.task import Task, Priority, Status, Project
 from pydantic import ValidationError
 
 def test_task_creation_minimal():

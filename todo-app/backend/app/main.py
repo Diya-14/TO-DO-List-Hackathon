@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.core.config import settings
 from app.core.db import init_db
-from app.api import auth, tasks
+from app.api import auth, tasks, chat
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
         init_db()
         print("Database connected and initialized successfully.")
     except Exception as e:
-        print(f"!!! DATABASE CONNECTION ERROR: {e}")
+        print(f"DATABASE CONNECTION ERROR: {e}")
         print("Server starting, but database features will fail until fixed.")
     yield
 
@@ -38,6 +38,7 @@ def ping():
 
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
 app.include_router(tasks.router, prefix=f"{settings.API_V1_STR}/tasks", tags=["tasks"])
+app.include_router(chat.router, prefix=f"{settings.API_V1_STR}/chat", tags=["chat"])
 
 # Maximum permissiveness for development
 app.add_middleware(

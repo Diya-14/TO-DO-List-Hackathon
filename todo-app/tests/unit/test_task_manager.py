@@ -1,7 +1,7 @@
 import pytest
-from src.core.task_manager import TaskManager
-from src.core.persistence import PersistenceManager
-from src.models.task import Task, Priority
+from cli.core.task_manager import TaskManager
+from cli.core.persistence import PersistenceManager
+from cli.models.task import Task, Priority
 
 @pytest.fixture
 def task_manager(temp_db):

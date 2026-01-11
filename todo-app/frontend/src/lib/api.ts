@@ -37,7 +37,9 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
     return response;
   } catch (error) {
     // Log the full error to the console for easier debugging
-    console.error(`[API Error] Failed to fetch: ${url}`, error);
+    console.error(`[API Error] Failed to fetch from: ${url}`);
+    console.error(`[API Error] Error details:`, error);
+    
     throw error;
   }
 }

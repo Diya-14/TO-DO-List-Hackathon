@@ -1,8 +1,8 @@
 import pytest
 import os
 import json
-from src.core.persistence import PersistenceManager
-from src.models.task import Task
+from cli.core.persistence import PersistenceManager
+from cli.models.task import Task
 
 def test_save_and_load_tasks(temp_db):
     # Initialize PM with temp file

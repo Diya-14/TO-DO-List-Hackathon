@@ -14,7 +14,7 @@
 
 2. **Run Application**:
    ```bash
-   python src/main.py --help
+   python cli/main.py --help
    ```
 
 ## Running Tests
@@ -26,11 +26,11 @@ pytest
 
 ```bash
 # Add a task
-python src/main.py add "Submit report by Friday urgent"
+python cli/main.py add "Submit report by Friday urgent"
 
 # List tasks
-python src/main.py list
+python cli/main.py list
 
 # Organize
-python src/main.py organize
+python cli/main.py organize
 ```
