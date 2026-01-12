@@ -26,3 +26,12 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 settings = Settings()
+print(f"DEBUG: Loaded settings. GEMINI_API_KEY present: {bool(settings.GEMINI_API_KEY)}")
+if not settings.GEMINI_API_KEY:
+    print(f"DEBUG: Current working directory: {os.getcwd()}")
+    print(f"DEBUG: .env exists: {os.path.exists('.env')}")
+    # Try manual fallback
+    from dotenv import load_dotenv
+    load_dotenv()
+    settings.GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+    print(f"DEBUG: After manual load, GEMINI_API_KEY present: {bool(settings.GEMINI_API_KEY)}")

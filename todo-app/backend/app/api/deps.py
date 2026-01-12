@@ -34,11 +34,10 @@ def get_current_user(
         raise credentials_exception
         
     try:
-        # Ensure we are passing a UUID object to session.get
-        # This prevents AttributeError in PostgreSQL if a string is passed
+        # Ensure we are passing an int to session.get
         user_id = token_data
         if isinstance(user_id, str):
-            user_id = uuid.UUID(user_id)
+            user_id = int(user_id)
         
         user = session.get(User, user_id)
     except (ValueError, TypeError):

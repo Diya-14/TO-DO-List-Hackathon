@@ -28,6 +28,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+@app.get("/debug-settings")
+def debug_settings():
+    return {
+        "gemini_key_present": bool(settings.GEMINI_API_KEY),
+        "gemini_key_length": len(settings.GEMINI_API_KEY) if settings.GEMINI_API_KEY else 0,
+        "api_v1_str": settings.API_V1_STR,
+        "database_url_type": "postgres" if "postgres" in settings.DATABASE_URL else "sqlite"
+    }
+
 @app.get("/")
 def root():
     return {"message": "Welcome to HackDo API"}

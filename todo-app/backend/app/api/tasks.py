@@ -36,7 +36,7 @@ def create_task(
 
 @router.get("/{task_id}", response_model=TaskRead)
 def read_task(
-    task_id: uuid.UUID,
+    task_id: int,
     session: Session = Depends(get_session),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
@@ -50,7 +50,7 @@ def read_task(
 @router.patch("/{task_id}", response_model=TaskRead)
 def update_task(
     *,
-    task_id: uuid.UUID,
+    task_id: int,
     session: Session = Depends(get_session),
     task_in: TaskUpdate,
     current_user: User = Depends(deps.get_current_user),
@@ -71,7 +71,7 @@ def update_task(
 @router.delete("/{task_id}")
 def delete_task(
     *,
-    task_id: uuid.UUID,
+    task_id: int,
     session: Session = Depends(get_session),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:

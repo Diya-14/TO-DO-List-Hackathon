@@ -13,9 +13,9 @@ class TaskBase(SQLModel):
     tags: Optional[str] = None # Comma-separated tags for simplicity in SQL
 
 class Task(TaskBase, table=True):
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    user_id: Optional[uuid.UUID] = Field(foreign_key="user.id")
+    user_id: Optional[int] = Field(foreign_key="user.id")
     
     user: User = Relationship(back_populates="tasks")
 
@@ -23,9 +23,9 @@ class TaskCreate(TaskBase):
     pass
 
 class TaskRead(TaskBase):
-    id: uuid.UUID
+    id: int
     created_at: datetime
-    user_id: uuid.UUID
+    user_id: int
 
 class TaskUpdate(SQLModel):
     title: Optional[str] = None
