@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { SearchProvider } from "@/context/SearchContext";
 import { ToastProvider } from "@/context/ToastContext";
+import { TaskRefreshProvider } from "@/context/TaskRefreshContext";
 import { ChatWidget } from "@/components/ChatWidget";
 
 const geistSans = Geist({
@@ -30,12 +31,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <SearchProvider>
-            <ToastProvider>
-              {children}
-              <ChatWidget />
-            </ToastProvider>
-          </SearchProvider>
+          <TaskRefreshProvider>
+            <SearchProvider>
+              <ToastProvider>
+                {children}
+                <ChatWidget />
+              </ToastProvider>
+            </SearchProvider>
+          </TaskRefreshProvider>
         </AuthProvider>
       </body>
     </html>

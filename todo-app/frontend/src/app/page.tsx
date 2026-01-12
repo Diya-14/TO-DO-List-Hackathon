@@ -8,6 +8,7 @@ import { fetchWithAuth } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useSearch } from "@/context/SearchContext";
 import { useToast } from "@/context/ToastContext";
+import { useTaskRefresh } from "@/context/TaskRefreshContext";
 import { Loader2, Plus, LayoutGrid, CheckCircle2, CircleDashed, Filter, Calendar, ListTodo, Star, Clock, AlertTriangle, Trash2, X, SearchX, Briefcase, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LandingPage } from "@/components/LandingPage";
@@ -37,13 +38,14 @@ export default function Home() {
   const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
   const { searchQuery, clearSearch } = useSearch();
   const { showToast } = useToast();
+  const { refreshKey } = useTaskRefresh();
   const [activeTab, setActiveTab] = useState('All Tasks');
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
         loadTasks();
     }
-  }, [authLoading, isAuthenticated]);
+  }, [authLoading, isAuthenticated, refreshKey]);
 
   const loadTasks = async () => {
     try {

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fetchWithAuth } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
+import { useTaskRefresh } from '@/context/TaskRefreshContext';
 
 interface Message {
   id?: string;
@@ -21,6 +22,7 @@ export function ChatWidget() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated } = useAuth();
   const { showToast } = useToast();
+  const { triggerRefresh } = useTaskRefresh();
 
   useEffect(() => {
     if (isOpen && isAuthenticated) {
@@ -67,6 +69,8 @@ export function ChatWidget() {
         const data = await res.json();
         const assistantMsg: Message = { role: 'assistant', message_text: data.response };
         setMessages(prev => [...prev, assistantMsg]);
+        triggerRefresh();
+        showToast("Dashboard updated", "info");
       } else {
         showToast("Failed to send message", "error");
       }
