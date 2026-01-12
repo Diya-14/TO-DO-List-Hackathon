@@ -1,5 +1,8 @@
-// Use 127.0.0.1 directly to avoid IPv6 resolution issues on Windows
-const API_URL = 'http://127.0.0.1:8000/api/v1';
+// In development, use the local backend. In production, use a relative path.
+const API_URL = typeof window !== 'undefined' && 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://127.0.0.1:8000/api/v1'
+  : '/api/v1';
 
 export async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
