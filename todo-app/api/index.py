@@ -41,3 +41,11 @@ app = app
 @app.get("/api/v1/vercel-ping")
 def vercel_ping():
     return {"status": "ok", "message": "Vercel Python runtime is working"}
+
+@app.get("/api/v1/path-check/{path:path}")
+def path_check(path: str):
+    return {
+        "requested_path": path,
+        "python_sys_path": sys.path[:5],
+        "cwd": os.getcwd()
+    }

@@ -5,6 +5,14 @@ from .config import settings
 engine_args = {}
 if settings.DATABASE_URL.startswith("sqlite"):
     engine_args = {"connect_args": {"check_same_thread": False}}
+else:
+    # Postgres/Neon optimizations
+    engine_args = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+        "pool_size": 5,
+        "max_overflow": 10
+    }
 
 engine = create_engine(
     settings.DATABASE_URL, 

@@ -1,14 +1,15 @@
 import sys
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from sqlmodel import Session
 
 # Add the parent directory to sys.path to allow 'app' module imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.core.config import settings
-from app.core.db import init_db
+from app.core.db import init_db, get_session
 from app.api import auth, tasks, chat
 
 @asynccontextmanager
@@ -31,6 +32,25 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     lifespan=lifespan,
 )
+
+@app.get("/db-check")
+def db_check(session: Session = Depends(get_session)):
+    try:
+        from sqlmodel import select
+        from app.models.user import User
+        # Just try to query one user (even if none exist)
+        session.exec(select(User)).first()
+        return {"status": "ok", "message": "Database connection and schema verified"}
+    except Exception as e:
+        import traceback
+        error_msg = str(e)
+        stack_trace = traceback.format_exc()
+        return {
+            "status": "error", 
+            "message": error_msg, 
+            "trace": stack_trace[:500], # Send first 500 chars of trace
+            "db_url_prefix": settings.DATABASE_URL[:15] if settings.DATABASE_URL else "None"
+        }
 
 @app.get("/debug-settings")
 def debug_settings():
