@@ -37,6 +37,10 @@ def debug_settings():
         "database_url_type": "postgres" if "postgres" in settings.DATABASE_URL else "sqlite"
     }
 
+@app.get("/health")
+def health_check():
+    return {"status": "alive", "environment": os.getenv("VERCEL_ENV", "local")}
+
 @app.get("/")
 def root():
     return {"message": "Welcome to HackDo API"}
