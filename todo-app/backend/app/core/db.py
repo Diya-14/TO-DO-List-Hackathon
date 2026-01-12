@@ -9,6 +9,8 @@ if settings.DATABASE_URL.startswith("sqlite"):
 engine = create_engine(settings.DATABASE_URL, echo=False, **engine_args)
 
 def get_session():
+    # Ensure tables exist (especially important for Vercel/Serverless)
+    init_db()
     with Session(engine) as session:
         yield session
 

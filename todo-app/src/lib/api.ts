@@ -39,6 +39,18 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
       throw new Error('Unauthorized');
     }
 
+    if (!response.ok) {
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `Server error: ${response.status}`);
+      } else {
+        const textError = await response.text();
+        console.error(`[API Error] Non-JSON error:`, textError);
+        throw new Error(`Server error (${response.status}). Please check backend logs.`);
+      }
+    }
+
     return response;
   } catch (error) {
     // Log the full error to the console for easier debugging

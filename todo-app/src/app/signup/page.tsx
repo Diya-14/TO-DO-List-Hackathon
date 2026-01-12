@@ -21,15 +21,10 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const res = await fetchWithAuth('/auth/signup', {
+      await fetchWithAuth('/auth/signup', {
         method: 'POST',
         body: JSON.stringify({ email, full_name: fullName, password }),
       });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.detail || 'Signup failed');
-      }
 
       router.push('/login?registered=true');
     } catch (err: any) {
