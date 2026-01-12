@@ -7,5 +7,10 @@
   ],
   "env": {
     "PYTHONPATH": "backend"
+  },
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 30
+    }
   }
 }

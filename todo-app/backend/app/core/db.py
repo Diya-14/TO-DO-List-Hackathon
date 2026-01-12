@@ -6,13 +6,19 @@ engine_args = {}
 if settings.DATABASE_URL.startswith("sqlite"):
     engine_args = {"connect_args": {"check_same_thread": False}}
 
-engine = create_engine(settings.DATABASE_URL, echo=False, **engine_args)
+engine = create_engine(
+    settings.DATABASE_URL, 
+    echo=False, 
+    **engine_args
+)
 
 def get_session():
-    # Ensure tables exist (especially important for Vercel/Serverless)
-    init_db()
     with Session(engine) as session:
         yield session
 
 def init_db():
-    SQLModel.metadata.create_all(engine)
+    try:
+        SQLModel.metadata.create_all(engine)
+    except Exception as e:
+        print(f"Error initializing database: {e}")
+        raise e

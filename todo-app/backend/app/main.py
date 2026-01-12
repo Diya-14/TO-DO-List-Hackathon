@@ -13,14 +13,18 @@ from app.api import auth, tasks, chat
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print(f"DEBUG: Starting lifespan. Database URL: {settings.DATABASE_URL[:20]}...")
     try:
         # In production, we'd use Alembic for migrations, but for hackathon speed/CLI alignment we can use create_all
         init_db()
-        print("Database connected and initialized successfully.")
+        print("DEBUG: Database connected and initialized successfully.")
     except Exception as e:
-        print(f"DATABASE CONNECTION ERROR: {e}")
+        import traceback
+        print(f"CRITICAL DATABASE CONNECTION ERROR: {e}")
+        traceback.print_exc()
         print("Server starting, but database features will fail until fixed.")
     yield
+    print("DEBUG: Shutting down lifespan.")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

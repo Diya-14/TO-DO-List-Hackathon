@@ -26,7 +26,18 @@ except ImportError as e:
         sys.path.append(root_dir)
         from backend.app.main import app
     except ImportError as e2:
+        # Create a minimal app if import fails so we can at least see the error
+        from fastapi import FastAPI
+        app = FastAPI()
+        @app.get("/api/v1/error")
+        def error_check():
+            return {"error": str(e2), "path": sys.path, "backend_dir": backend_dir}
         raise Exception(f"Could not find backend app. Path: {backend_dir}") from e2
 
-# This allows Vercel to see the app
+# Add a direct health check that doesn't rely on app.main if possible
+# or just ensure app is exported
 app = app
+
+@app.get("/api/v1/vercel-ping")
+def vercel_ping():
+    return {"status": "ok", "message": "Vercel Python runtime is working"}
