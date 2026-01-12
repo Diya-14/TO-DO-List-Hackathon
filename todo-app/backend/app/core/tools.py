@@ -81,11 +81,11 @@ def delete_task(session: Session, user_id: UUID, task_id: UUID) -> str:
 
 def update_task(session: Session, user_id: UUID, task_id: UUID, title: Optional[str] = None) -> str:
     """
-    Update a task's title.
+    Update a task's details.
     
     Args:
         task_id: The ID of the task to update.
-        title: The new title for the task.
+        title: The new title (optional).
     """
     task = session.get(Task, task_id)
     if not task or task.user_id != user_id:
@@ -93,7 +93,29 @@ def update_task(session: Session, user_id: UUID, task_id: UUID, title: Optional[
     
     if title:
         task.title = title
-        session.add(task)
-        session.commit()
-        return f"Task updated to '{task.title}'."
-    return "No changes made."
+        
+    session.add(task)
+    session.commit()
+    session.refresh(task)
+    return f"Task updated successfully."
+
+def find_task_by_title(session: Session, user_id: UUID, title_query: str) -> Optional[Task]:
+    """
+    Find a task that matches a title query for the current user.
+    """
+    stmt = select(Task).where(Task.user_id == user_id)
+    tasks = session.exec(stmt).all()
+    
+    title_query = title_query.lower().strip()
+    
+    # Try exact match first
+    for t in tasks:
+        if t.title.lower().strip() == title_query:
+            return t
+            
+    # Try partial match
+    for t in tasks:
+        if title_query in t.title.lower():
+            return t
+            
+    return None

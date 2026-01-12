@@ -20,16 +20,18 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
   const url = `${API_URL}${cleanEndpoint}`;
 
   try {
+    console.log(`[API] Fetching: ${url}`);
     const response = await fetch(url, {
       ...options,
       headers,
       cache: 'no-store',
     });
+    
+    console.log(`[API] Status: ${response.status} for ${url}`);
 
     if (response.status === 401) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('access_token');
-        window.location.href = '/login';
       }
       throw new Error('Unauthorized');
     }

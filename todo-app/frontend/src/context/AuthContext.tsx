@@ -35,26 +35,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Check token on mount
     const token = localStorage.getItem('access_token');
+    console.log("[Auth] Mount - Token exists:", !!token);
+    
     if (token) {
       setIsAuthenticated(true);
       fetchUser();
     } else {
+      console.log("[Auth] No token found on mount");
+      setIsAuthenticated(false);
       setIsLoading(false);
     }
   }, []);
 
   const fetchUser = async () => {
     try {
+      console.log("[Auth] Fetching user info...");
       const res = await fetchWithAuth('/auth/me');
       if (res.ok) {
         const userData = await res.json();
+        console.log("[Auth] User fetch success:", userData.email);
         setUser(userData);
+        setIsAuthenticated(true);
       } else {
-        // Token invalid?
-        logout();
+        console.warn("[Auth] User fetch failed with status:", res.status);
+        if (res.status === 401) {
+            setIsAuthenticated(false);
+            localStorage.removeItem('access_token');
+        }
       }
     } catch (error) {
-      console.error("Failed to fetch user", error);
+      console.error("[Auth] User fetch error:", error);
+      setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
     }
@@ -66,12 +77,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const publicPaths = ['/login', '/signup', '/'];
     const isPublicPath = publicPaths.includes(pathname);
 
+    // CRITICAL: If we are at root (/), LandingPage is shown. Do NOT redirect.
+    if (pathname === '/') {
+        console.log("[Auth] At root, letting Home handle rendering");
+        return;
+    }
+
+    // If we're not authenticated and trying to access a protected page (NOT root, login, or signup)
     if (!isAuthenticated && !isPublicPath) {
-      router.replace('/login'); // Use replace to prevent back-button loops
-    } else if (isAuthenticated && (pathname === '/login' || pathname === '/signup')) {
+      console.log("[Auth] Protected path detected, redirecting to /login:", pathname);
+      router.replace('/login');
+    } 
+    // If we ARE authenticated and trying to access login/signup
+    else if (isAuthenticated && (pathname === '/login' || pathname === '/signup')) {
+      console.log("[Auth] Already authenticated, redirecting to /");
       router.replace('/');
     }
-  }, [isAuthenticated, isLoading, pathname, router]);
+  }, [isAuthenticated, isLoading, pathname]);
 
   const login = (token: string) => {
     localStorage.setItem('access_token', token);

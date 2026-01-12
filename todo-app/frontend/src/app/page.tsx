@@ -202,7 +202,15 @@ export default function Home() {
     return "Good Night";
   };
 
-  if (!authLoading && !isAuthenticated) {
+  if (authLoading) {
+    return (
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return <LandingPage />;
   }
 
