@@ -6,7 +6,8 @@
     }
   ],
   "env": {
-    "PYTHONPATH": "backend"
+    "PYTHONPATH": "backend",
+    "PYTHONIOENCODING": "utf-8"
   },
   "functions": {
     "api/index.py": {
