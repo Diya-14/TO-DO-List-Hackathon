@@ -60,3 +60,5 @@ coverage.xml
 *.cover
 *.log
 .pytest_cache/
+.vercel
+.env*.local
