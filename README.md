@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Todo AI Chatbot — Hackathon Phase IV
 
-## Getting Started
+## Project Overview
+This project is a **cloud-native Todo AI Chatbot** that evolved from:
+1. Console Todo App (Phase I)
+2. Full-Stack Web App (Phase II)
+3. AI Chatbot with natural language commands (Phase III)
+4. Local Kubernetes Deployment (Phase IV)
 
-First, run the development server:
+## Phase IV: Local Kubernetes Deployment
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Deployment Approach
+- Backend (FastAPI) and Frontend (Next.js) are **containerized** with Docker.
+- **Kubernetes YAMLs** and **Helm charts** are prepared for cloud-native deployment.
+- Stateless architecture ensures **scalability** and **resilience**.
+- **AIOps analysis** demonstrates health monitoring, resource optimization, and failure handling.
+
+### Tools & Architecture
+- Containerization: Docker (Gordon AI-assisted)
+- Orchestration: Minikube (local Kubernetes)
+- Helm Charts for deployment packaging
+- AI DevOps: kubectl-ai, Kagent (analysis & optimization)
+- Database: Neon Serverless PostgreSQL
+- Authentication: Better Auth (JWT)
+- AI logic: OpenAI Agents SDK + MCP tools
+
+### Project Structure
+
+```text
+TO-DO-List-Hackathon/
+├── todo-app/
+│   ├── Dockerfile                  # Production Dockerfile for Next.js Frontend
+│   ├── .dockerignore               # Docker build exclusions
+│   ├── backend/
+│   │   ├── Dockerfile              # Production Dockerfile for FastAPI Backend
+│   │   ├── requirements.txt        # Python dependencies
+│   │   └── app/                    # Backend source code
+│   └── src/                        # Frontend source code
+│
+├── k8s/                            # Raw Kubernetes Manifests
+│   ├── backend-deployment.yaml     # Backend Pods & Config
+│   ├── backend-service.yaml        # Internal ClusterIP Service
+│   ├── frontend-deployment.yaml    # Frontend Pods & Env Vars
+│   └── frontend-service.yaml       # External LoadBalancer Service
+│
+├── helm/                           # Helm Chart for Package Management
+│   └── todo-chatbot/
+│       ├── Chart.yaml              # Chart Metadata
+│       ├── values.yaml             # Default Configuration (Images, Ports)
+│       └── templates/              # Templated K8s Manifests
+│
+├── docs/
+│   └── phase4-aiops.md             # AIOps Strategy & Cluster Analysis Report
+│
+└── specs/
+    └── phase4-deployment.md        # Phase IV Requirements & Goals
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

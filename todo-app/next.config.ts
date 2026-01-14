@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   /* config options here */
   async rewrites() {
     // Only rewrite in development. In production, vercel.json handles it.
