@@ -1,0 +1,28 @@
+   +---------------------+
+   |  Frontend (React)   |
+   +----------+----------+
+              | HTTP/REST
+              v
+   +----------+----------+         +-----------------+
+   |    Backend API      | <-----> |  Dapr Sidecar   |
+   |     (FastAPI)       |         | (localhost:3500)|
+   +----------+----------+         +--------+--------+
+              |                             |
+              | (Writes to DB)              | Publishes Events
+              |                             v
+              |                  +----------+----------+
+              |                  |  Dapr Pub/Sub Comp  |
+              |                  |   (Kafka/Redpanda)  |
+              |                  +----------+----------+
+              |                             |
+              |                             | Distributes to Topics
+              |                             | (task.created, etc.)
+              |                             |
+      +-------+-----------------------------+-----------------------+
+      |                                                             |
+      v                                                             v
++-----+------+  +--------------+                              +-----+------+  +--------------+
+|  Dapr      |  |   Reminder   |                              |  Dapr      |  |    Audit     |
+|  Sidecar   |->|   Service    |                              |  Sidecar   |->|   Service    |
++------------+  +--------------+                              +------------+  +--------------+
+(Subscribes)     (Business Logic)                             (Subscribes)     (Logging)

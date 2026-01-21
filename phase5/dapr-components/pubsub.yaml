@@ -1,0 +1,18 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+spec:
+  type: pubsub.kafka
+  version: v1
+  metadata:
+  - name: brokers
+    value: "localhost:9092"
+  - name: consumerGroup
+    value: "todo-services-group"
+  - name: clientID
+    value: "todo-client"
+  - name: authType
+    value: "none"
+  # For local development with Redpanda/Kafka, no auth is assumed strictly for this free-tier setup.
+  # In production, use "mtls" or "password".
