@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: todo-backend-api
+    runtime: docker
+    repo: https://github.com/Diya-14/TO-DO-List-Hackathon
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: todo-app/backend
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # You will be asked to enter this securely in the dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PORT
+        value: 8000
+      - key: OPENAI_API_KEY
+        sync: false # You will be asked to enter this securely
