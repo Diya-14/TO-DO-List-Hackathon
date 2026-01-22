@@ -2,18 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  /* config options here */
   async rewrites() {
-    // Only rewrite in development. In production, vercel.json handles it.
-    if (process.env.NODE_ENV === "development") {
-      return [
-        {
-          source: "/api/:path*",
-          destination: "http://127.0.0.1:8000/api/:path*",
-        },
-      ];
-    }
-    return [];
+    const backendUrl = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+    console.log(`[Next.js Rewrite] /api/:path* -> ${backendUrl}/api/:path*`);
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
+      },
+    ];
   },
 };
 

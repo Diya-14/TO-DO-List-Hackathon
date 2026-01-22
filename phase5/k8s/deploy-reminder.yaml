@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reminder-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reminder-service
+  template:
+    metadata:
+      labels:
+        app: reminder-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "reminder-service"
+        dapr.io/app-port: "6001"
+    spec:
+      containers:
+      - name: reminder-service
+        image: diyaiqbal14/reminder-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6001

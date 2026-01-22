@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: audit-service
+  template:
+    metadata:
+      labels:
+        app: audit-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "audit-service"
+        dapr.io/app-port: "6000"
+    spec:
+      containers:
+      - name: audit-service
+        image: diyaiqbal14/audit-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6000
