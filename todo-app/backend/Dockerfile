@@ -24,7 +24,7 @@ COPY . .
 
 # Set environment variables (update values or use Docker Compose for secrets)
 ENV DATABASE_URL="postgresql://neondb_owner:npg_LW1ZvE9BOkSp@ep-withered-wind-ahptpw5o-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-ENV SECRET_KEY="cb1f87faafb24863bb5c6c9126adca87"
+# ENV SECRET_KEY should be passed at runtime for security
 
 # Expose FastAPI port
 EXPOSE 8000

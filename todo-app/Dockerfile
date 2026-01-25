@@ -3,7 +3,7 @@
 # =========================
 
 # Base image
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # -------------------------
 # Dependencies stage
@@ -33,7 +33,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Disable Next.js telemetry during build
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build Next.js app
 RUN npm run build
@@ -45,10 +45,10 @@ FROM base AS runner
 WORKDIR /app
 
 # Set environment variables
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 ENV NEXT_PUBLIC_API_URL="http://todo-backend-service:8000"
 
 # Create non-root user
