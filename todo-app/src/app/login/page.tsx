@@ -35,10 +35,9 @@ export default function LoginPage() {
       }
 
       const data = await res.json();
-      login(data.access_token);
+      await login(data.access_token);
     } catch (err: any) {
       setError(err.message);
-    } finally {
       setLoading(false);
     }
   };

@@ -16,13 +16,18 @@ spec:
     spec:
       containers:
       - name: backend
-        image: todo-backend:latest
-        imagePullPolicy: IfNotPresent
+        image: diyaiqbal14/todo-backend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
         env:
         - name: DATABASE_URL
-          value: "postgresql://user:password@postgres-service:5432/todo"
+          value: "postgresql://neondb_owner:npg_LW1ZvE9BOkSp@ep-withered-wind-ahptpw5o-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require"
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: SECRET_KEY
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:

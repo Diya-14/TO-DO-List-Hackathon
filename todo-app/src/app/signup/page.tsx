@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import { fetchWithAuth } from '@/lib/api';
 import { Loader2, CheckSquare, ArrowRight, ShieldCheck, Zap, UserPlus } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -13,7 +13,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,15 +21,32 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
+      // Step 1: Create the user account
       await fetchWithAuth('/auth/signup', {
         method: 'POST',
         body: JSON.stringify({ email, full_name: fullName, password }),
       });
 
-      router.push('/login?registered=true');
+      // Step 2: Automatically log the user in
+      const formData = new FormData();
+      formData.append('username', email);
+      formData.append('password', password);
+
+      const res = await fetchWithAuth('/auth/login', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.detail || 'Failed to login after signup.');
+      }
+
+      const data = await res.json();
+      await login(data.access_token);
+      
     } catch (err: any) {
       setError(err.message);
-    } finally {
       setLoading(false);
     }
   };

@@ -59,9 +59,11 @@ export default function Home() {
       } else {
         const errData = await res.json().catch(() => ({}));
         console.error('Server error:', errData);
+        showToast(errData.detail || "Failed to load tasks.", "error");
       }
     } catch (error) {
       console.error('Network or Connection error:', error);
+      showToast("Connection error. Is the backend running?", "error");
     } finally {
       setLoading(false);
     }

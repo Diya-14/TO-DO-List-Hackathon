@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlmodel import Session, select
 from app.models.task import Task, TaskCreate, TaskUpdate
 
-def list_tasks(session: Session, user_id: int, status: str = "all") -> List[Task]:
+def list_tasks(session: Session, user_id: UUID, status: str = "all") -> List[Task]:
     """
     List tasks for the current user.
     
@@ -18,7 +18,7 @@ def list_tasks(session: Session, user_id: int, status: str = "all") -> List[Task
 
 def add_task(
     session: Session, 
-    user_id: int, 
+    user_id: UUID, 
     title: str, 
     description: Optional[str] = None,
     priority: str = "medium",
@@ -48,7 +48,7 @@ def add_task(
     session.refresh(task)
     return task
 
-def complete_task(session: Session, user_id: int, task_id: int) -> str:
+def complete_task(session: Session, user_id: UUID, task_id: UUID) -> str:
     """
     Mark a task as complete.
     
@@ -64,7 +64,7 @@ def complete_task(session: Session, user_id: int, task_id: int) -> str:
     session.commit()
     return f"Task '{task.title}' marked as completed."
 
-def delete_task(session: Session, user_id: int, task_id: int) -> str:
+def delete_task(session: Session, user_id: UUID, task_id: UUID) -> str:
     """
     Delete a task.
     
@@ -79,7 +79,7 @@ def delete_task(session: Session, user_id: int, task_id: int) -> str:
     session.commit()
     return f"Task '{task.title}' deleted."
 
-def update_task(session: Session, user_id: int, task_id: int, title: Optional[str] = None) -> str:
+def update_task(session: Session, user_id: UUID, task_id: UUID, title: Optional[str] = None) -> str:
     """
     Update a task's details.
     
@@ -99,7 +99,7 @@ def update_task(session: Session, user_id: int, task_id: int, title: Optional[st
     session.refresh(task)
     return f"Task updated successfully."
 
-def find_task_by_title(session: Session, user_id: int, title_query: str) -> Optional[Task]:
+def find_task_by_title(session: Session, user_id: UUID, title_query: str) -> Optional[Task]:
     """
     Find a task that matches a title query for the current user.
     """

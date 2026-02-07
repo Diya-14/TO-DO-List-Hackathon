@@ -25,17 +25,17 @@ export function TaskForm({ initialData, onSubmit, onCancel, isLoading }: TaskFor
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title.trim() || !description.trim() || !dueDate || !tags.trim()) {
-      showToast("Please fill in all fields before creating the task.", "error");
+    if (!title.trim()) {
+      showToast("Please enter a task title.", "error");
       return;
     }
 
     onSubmit({
       title,
-      description,
+      description: description.trim() || null,
       priority,
       due_date: dueDate ? new Date(dueDate).toISOString() : null,
-      tags: tags,
+      tags: tags.trim() || null,
       status: initialData?.status || 'pending'
     });
   };

@@ -32,15 +32,35 @@ def get_current_user(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-        
+
     try:
-        # Ensure we are passing an int to session.get
-        user_id = token_data
-        if isinstance(user_id, str):
-            user_id = int(user_id)
+        # Robustly handle the user_id conversion
+        if isinstance(token_data, str):
+            try:
+                user_id = uuid.UUID(token_data)
+            except ValueError:
+                print(f"DEBUG: Invalid UUID string: {token_data}")
+                raise credentials_exception
+        else:
+            user_id = token_data
+            
+        print(f"DEBUG: calling session.get(User, {user_id}) type={type(user_id)}")
+        print(f"DEBUG: DB URL starts with: {settings.DATABASE_URL[:10] if settings.DATABASE_URL else 'None'}")
         
+        # Ensure we are passing a UUID object to session.get
         user = session.get(User, user_id)
-    except (ValueError, TypeError):
+        
+        if not user:
+            print(f"DEBUG: User not found by UUID, trying string fallback for SQLite compatibility...")
+            # Try searching by string ID if UUID fails (for SQLite compatibility)
+            from sqlmodel import select
+            user = session.exec(select(User).where(User.id == str(user_id))).first()
+            
+    except (ValueError, TypeError) as e:
+        print(f"DEBUG: Auth error - invalid UUID format: {token_data}")
+        raise credentials_exception
+    except Exception as e:
+        print(f"DEBUG: Unexpected error in get_current_user: {str(e)}")
         raise credentials_exception
 
     if not user:

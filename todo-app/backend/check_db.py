@@ -6,6 +6,7 @@ from app.core.config import settings
 engine = create_engine(settings.DATABASE_URL)
 
 def check():
+    print(f"DEBUG: DB URL: {settings.DATABASE_URL[:25]}...")
     with Session(engine) as session:
         # Check tables
         from sqlalchemy import inspect

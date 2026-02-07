@@ -1,10 +1,22 @@
 Write-Host "Starting HackDo Setup & Launch (Unified Version)..." -ForegroundColor Cyan
 
+# Check for conflicting processes on ports 8000 and 3000
+Write-Host "Checking for conflicting processes on ports 8000 and 3000..." -ForegroundColor Yellow
+$ports = @(8000, 3000)
+foreach ($port in $ports) {
+    $proc = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique
+    if ($proc) {
+        Write-Host "Found process $proc listening on port $port. Terminating it to avoid conflicts..." -ForegroundColor Yellow
+        Stop-Process -Id $proc -Force -ErrorAction SilentlyContinue
+    }
+}
+
 $root = $PSScriptRoot
 $backendPath = Join-Path $root "backend"
 $venvPython = Join-Path $backendPath "venv\Scripts\python.exe"
 
 $env:PYTHONUTF8 = "1"
+$env:PYTHONIOENCODING = "utf-8"
 
 # 1. Backend Setup
 Write-Host "Setting up Backend..." -ForegroundColor Yellow
@@ -36,11 +48,25 @@ if (-not (Test-Path "node_modules")) {
     }
 }
 
-Write-Host "Starting App (Frontend + Backend)..." -ForegroundColor Green
-# Use cmd /c for npm on Windows
-Start-Process -FilePath "cmd" -ArgumentList "/k npm run dev" -WorkingDirectory $root
-
 # 3. Launch
+Write-Host "Starting Backend..." -ForegroundColor Green
+$backendCmd = "cd '$backendPath'; `$env:PYTHONIOENCODING='utf-8'; `$env:PYTHONUTF8='1'; ./venv/Scripts/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "$backendCmd"
+
+Write-Host "Starting Frontend..." -ForegroundColor Green
+# Resolve npm path again just to be safe
+$npmCmd = "npm"
+if ($IsWindows) {
+    $npmPath = Get-Command npm -ErrorAction SilentlyContinue
+    if ($npmPath) {
+        if ($npmPath.Source.EndsWith(".cmd")) {
+             $npmCmd = $npmPath.Source
+        }
+    }
+}
+$frontendCmd = "cd '$root'; & '$npmCmd' run dev:frontend"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "$frontendCmd"
+
 Write-Host "Application is starting!" -ForegroundColor Cyan
 Write-Host "Backend API: http://localhost:8000"
 Write-Host "Frontend UI: http://localhost:3000"

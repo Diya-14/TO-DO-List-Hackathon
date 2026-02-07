@@ -8,7 +8,7 @@ class UserBase(SQLModel):
     full_name: Optional[str] = None
 
 class User(UserBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
     hashed_password: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
@@ -18,5 +18,5 @@ class UserCreate(UserBase):
     password: str
 
 class UserRead(UserBase):
-    id: int
+    id: uuid.UUID
     created_at: datetime

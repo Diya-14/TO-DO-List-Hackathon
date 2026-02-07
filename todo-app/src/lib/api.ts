@@ -1,8 +1,20 @@
-// In development, use the local backend. In production, use a relative path.
-const API_URL = typeof window !== 'undefined' && 
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? 'http://127.0.0.1:8000/api/v1'
-  : '/api/v1';
+// Detect the best API URL at runtime
+const getApiUrl = () => {
+  if (typeof window === 'undefined') return '/api/v1';
+  
+  // If we are on localhost:3000 (standard dev), we might be port-forwarding the backend to 8000
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    // If the port is 3000, we prefer hitting the backend directly on 8000 to avoid proxy issues during dev
+    if (window.location.port === '3000') {
+      return 'http://127.0.0.1:8000/api/v1';
+    }
+  }
+  
+  // Default to relative path for production/Kubernetes Ingress/Next.js Rewrites
+  return '/api/v1';
+};
+
+const API_URL = getApiUrl();
 
 export async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
@@ -23,14 +35,14 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
   const url = `${API_URL}${cleanEndpoint}`;
 
   try {
-    console.log(`[API] Fetching: ${url}`);
+    console.log(`[API Request] ${options.method || 'GET'} -> ${url}`);
     const response = await fetch(url, {
       ...options,
       headers,
       cache: 'no-store',
     });
     
-    console.log(`[API] Status: ${response.status} for ${url}`);
+    console.log(`[API Response] ${response.status} from ${url}`);
 
     if (response.status === 401) {
       if (typeof window !== 'undefined') {

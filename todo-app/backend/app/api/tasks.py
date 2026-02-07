@@ -17,8 +17,10 @@ def read_tasks(
     skip: int = 0,
     limit: int = 100,
 ) -> Any:
+    print(f"DEBUG: Fetching tasks for user: {current_user.email} (ID: {current_user.id})")
     statement = select(Task).where(Task.user_id == current_user.id).offset(skip).limit(limit)
     tasks = session.exec(statement).all()
+    print(f"DEBUG: Found {len(tasks)} tasks")
     return tasks
 
 @router.post("/", response_model=TaskRead)
@@ -28,15 +30,17 @@ def create_task(
     task_in: TaskCreate,
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
+    print(f"DEBUG: Creating task for user: {current_user.id}. Title: {task_in.title}")
     task = Task.model_validate(task_in, update={"user_id": current_user.id})
     session.add(task)
     session.commit()
     session.refresh(task)
+    print(f"DEBUG: Task created with ID: {task.id}")
     return task
 
 @router.get("/{task_id}", response_model=TaskRead)
 def read_task(
-    task_id: int,
+    task_id: uuid.UUID,
     session: Session = Depends(get_session),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
@@ -50,7 +54,7 @@ def read_task(
 @router.patch("/{task_id}", response_model=TaskRead)
 def update_task(
     *,
-    task_id: int,
+    task_id: uuid.UUID,
     session: Session = Depends(get_session),
     task_in: TaskUpdate,
     current_user: User = Depends(deps.get_current_user),
@@ -71,7 +75,7 @@ def update_task(
 @router.delete("/{task_id}")
 def delete_task(
     *,
-    task_id: int,
+    task_id: uuid.UUID,
     session: Session = Depends(get_session),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:

@@ -1,16 +1,31 @@
-from sqlmodel import create_engine, text
+from sqlmodel import SQLModel, create_engine, Session, text
 from app.core.config import settings
+from app.models.user import User
+from app.models.task import Task
 
-def reset_remote_db():
-    print(f"Connecting to: {settings.DATABASE_URL}")
-    engine = create_engine(settings.DATABASE_URL)
-    with engine.connect() as conn:
-        print("Dropping tables...")
-        conn.execute(text("DROP TABLE IF EXISTS task CASCADE;"))
-        conn.execute(text("DROP TABLE IF EXISTS conversation CASCADE;"))
-        conn.execute(text("DROP TABLE IF EXISTS \"user\" CASCADE;")) # 'user' is reserved keyword in pg
-        conn.commit()
-        print("Tables dropped.")
+# Force connection to NeonDB
+print(f"DEBUG: DB URL: {settings.DATABASE_URL[:25]}...")
+engine = create_engine(settings.DATABASE_URL)
+
+def reset_db():
+    print("WARNING: This will drop all tables in the database!")
+    
+    # Reflect existing tables
+    from sqlalchemy import MetaData
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+    
+    print(f"Found tables: {metadata.tables.keys()}")
+    
+    # Drop all tables
+    print("Dropping all tables...")
+    metadata.drop_all(bind=engine)
+    
+    # Recreate tables
+    print("Creating tables from models...")
+    SQLModel.metadata.create_all(engine)
+    
+    print("Database reset complete.")
 
 if __name__ == "__main__":
-    reset_remote_db()
+    reset_db()

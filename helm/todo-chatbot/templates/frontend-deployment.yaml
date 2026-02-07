@@ -22,6 +22,8 @@ spec:
         - containerPort: 3000
         env:
         - name: NEXT_PUBLIC_API_URL
+          value: "/api/v1"
+        - name: BACKEND_URL
           value: "http://{{ include "todo-chatbot.fullname" . }}-backend:{{ .Values.backend.service.port }}"
         resources:
           {{- toYaml .Values.frontend.resources | nindent 10 }}

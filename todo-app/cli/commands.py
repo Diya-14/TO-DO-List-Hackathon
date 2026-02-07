@@ -11,9 +11,8 @@ from cli.core.task_manager import TaskManager
 from cli.models.task import Task, Status, Priority
 
 app = typer.Typer()
-console = Console()
 
-def get_task_manager() -> TaskManager:
+def get_task_manager_instance() -> TaskManager:
     config = ConfigManager()
     path = str(config.get_db_path())
     persistence = PersistenceManager(file_path=path)
@@ -24,9 +23,6 @@ def get_task_manager() -> TaskManager:
         persistence._write_initial_structure()
     return TaskManager(persistence)
 
-def get_parser() -> NLParser:
-    return NLParser()
-
 @app.command()
 def add(
     text: str,
@@ -34,8 +30,9 @@ def add(
     due: Optional[str] = typer.Option(None, help="Explicitly set due date")
 ):
     """Add a new task using natural language or explicit flags."""
-    tm = get_task_manager()
-    parser = get_parser()
+    console = Console()
+    tm = get_task_manager_instance()
+    parser = NLParser() # Initialize parser here
     
     # 1. Parse natural language
     parsed_data = parser.parse(text)
@@ -69,8 +66,9 @@ def update(
     due: Optional[str] = typer.Option(None, help="Explicitly set due date")
 ):
     """Update an existing task."""
-    tm = get_task_manager()
-    parser = get_parser()
+    console = Console()
+    tm = get_task_manager_instance()
+    parser = NLParser() # Initialize parser here
     try:
         # 1. Verify task exists
         existing_task = tm.get_task_by_id(task_id)
@@ -91,7 +89,7 @@ def update(
             if parsed_due:
                 updates["due_date"] = parsed_due
             else:
-                console.print(f"[yellow]Warning: Could not parse due date '{due}'. Skipping.[/yellow]")
+                print(f"Warning: Could not parse due date '{due}'. Skipping.")
 
         if not updates:
             console.print("[yellow]No changes provided.[/yellow]")
@@ -119,7 +117,8 @@ def list(
     priority: Optional[Priority] = typer.Option(None, help="Filter by priority (low/medium/high)")
 ):
     """List tasks in a table."""
-    tm = get_task_manager()
+    console = Console()
+    tm = get_task_manager_instance()
     tasks = tm.list_tasks(status=status, priority=priority)
     
     if not tasks:
@@ -149,7 +148,8 @@ def list(
 @app.command()
 def complete(task_id: str):
     """Mark a task as completed."""
-    tm = get_task_manager()
+    console = Console()
+    tm = get_task_manager_instance()
     if tm.complete_task(task_id):
         console.print(f"[green]Task {task_id} marked as completed.[/green]")
     else:
@@ -158,7 +158,8 @@ def complete(task_id: str):
 @app.command()
 def delete(task_id: str):
     """Delete a task permanently."""
-    tm = get_task_manager()
+    console = Console()
+    tm = get_task_manager_instance()
     if tm.delete_task(task_id):
         console.print(f"[green]Task {task_id} deleted.[/green]")
     else:
@@ -167,7 +168,8 @@ def delete(task_id: str):
 @app.command()
 def organize():
     """Trigger AI clustering to suggest groupings of pending tasks."""
-    tm = get_task_manager()
+    console = Console()
+    tm = get_task_manager_instance()
     tasks = tm.list_tasks(status=Status.PENDING)
     if not tasks:
         console.print("[yellow]No pending tasks to organize.[/yellow]")

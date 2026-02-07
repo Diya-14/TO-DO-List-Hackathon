@@ -5,7 +5,8 @@ import pytest
 def test_startup_performance():
     start_time = time.time()
     # Run 'python cli/main.py --help' as it's a common cold start path
-    result = subprocess.run(["python", "cli/main.py", "--help"], capture_output=True)    end_time = time.time()
+    result = subprocess.run(["python", "cli/main.py", "--help"], capture_output=True)
+    end_time = time.time()
     
     duration_ms = (end_time - start_time) * 1000
     print(f"\nCold start duration: {duration_ms:.2f}ms")

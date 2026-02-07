@@ -8,6 +8,17 @@ from sqlmodel import Session
 # Add the parent directory to sys.path to allow 'app' module imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Force UTF-8 encoding for stdout/stderr on Windows to avoid CP1252 errors
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # Fallback for older Python versions or environments where reconfigure isn't available
+        import codecs
+        sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+        sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach())
+
 from app.core.config import settings
 from app.core.db import init_db, get_session
 from app.api import auth, tasks, chat
@@ -27,10 +38,32 @@ async def lifespan(app: FastAPI):
     yield
     print("DEBUG: Shutting down lifespan.")
 
+from fastapi.responses import JSONResponse
+from sqlalchemy.exc import StatementError
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     lifespan=lifespan,
+)
+
+@app.exception_handler(StatementError)
+async def statement_error_handler(request, exc):
+    import traceback
+    print(f"DEBUG: SQL Statement Error: {exc}")
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Database error: mismatch in data types (e.g. UUID vs String). Please check server logs."},
+    )
+
+# CORS must be added BEFORE routers to handle preflight requests correctly
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/db-check")
@@ -76,12 +109,3 @@ def ping():
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
 app.include_router(tasks.router, prefix=f"{settings.API_V1_STR}/tasks", tags=["tasks"])
 app.include_router(chat.router, prefix=f"{settings.API_V1_STR}/chat", tags=["chat"])
-
-# Maximum permissiveness for development
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)

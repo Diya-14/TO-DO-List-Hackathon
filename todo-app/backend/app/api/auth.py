@@ -78,4 +78,5 @@ def login_access_token(
 def read_users_me(
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
+    print(f"DEBUG: Reading user info for: {current_user.email}")
     return current_user
