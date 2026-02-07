@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   async rewrites() {
+    const isDev = process.env.NODE_ENV === 'development';
+    if (!isDev) {
+      return [];
+    }
     const backendUrl = process.env.BACKEND_URL || "http://127.0.0.1:8000";
     console.log(`[Next.js Rewrite] /api/:path* -> ${backendUrl}/api/:path*`);
     return [
