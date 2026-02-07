@@ -35,17 +35,25 @@ class Settings(BaseSettings):
     SECRET_KEY: str = os.getenv("SECRET_KEY", "cb1f87faafb24863bb5c6c9126adca87")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    GEMINI_API_KEY: str = ""
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
+# Manual override to ensure .env is loaded regardless of how uvicorn is started
+from dotenv import load_dotenv
+_base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_env_path = os.path.join(_base_dir, ".env")
+print(f"DEBUG: Looking for .env at: {_env_path}")
+if os.path.exists(_env_path):
+    load_dotenv(_env_path, override=True)
+    print("DEBUG: .env file found and loaded.")
+else:
+    print("DEBUG: .env file NOT found at expected path.")
+
 settings = Settings()
-print(f"DEBUG: Loaded settings. GEMINI_API_KEY present: {bool(settings.GEMINI_API_KEY)}")
+
+# Force check after load_dotenv
 if not settings.GEMINI_API_KEY:
-    print(f"DEBUG: Current working directory: {os.getcwd()}")
-    print(f"DEBUG: .env exists: {os.path.exists('.env')}")
-    # Try manual fallback
-    from dotenv import load_dotenv
-    load_dotenv()
     settings.GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-    print(f"DEBUG: After manual load, GEMINI_API_KEY present: {bool(settings.GEMINI_API_KEY)}")
+
+print(f"DEBUG: Final Settings - GEMINI_API_KEY present: {bool(settings.GEMINI_API_KEY)}")

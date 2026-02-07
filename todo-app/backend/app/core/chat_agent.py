@@ -81,15 +81,33 @@ def process_chat(session: Session, user_id: UUID, message: str, history: List[Co
     processed_message = resolve_task_indices(session, user_id, message)
 
     def list_tasks_tool(status: str = "all"):
-        """List tasks. Filter: 'pending', 'completed', 'all'."""
+        """
+        List the user's tasks.
+        
+        Args:
+            status: Filter tasks by status. Can be 'pending', 'completed', or 'all'. Defaults to 'all'.
+        """
         return [t.model_dump(mode='json') for t in tools.list_tasks(session, user_id, status)]
 
-    def add_task_tool(title: str, priority: str = "medium"):
-        """Add a new task."""
-        return tools.add_task(session, user_id, title, priority=priority).model_dump(mode='json')
+    def add_task_tool(title: str, priority: str = "medium", description: str = None, tags: str = None):
+        """
+        Add a new task to the user's to-do list.
+        
+        Args:
+            title: The name of the task (Required).
+            priority: Level of importance: 'low', 'medium', or 'high'. Defaults to 'medium'.
+            description: Optional detailed notes about the task.
+            tags: Optional comma-separated categories (e.g. 'work, home').
+        """
+        return tools.add_task(session, user_id, title, description=description, priority=priority, tags=tags).model_dump(mode='json')
 
     def complete_task_tool(task_id: str):
-        """Complete task by ID."""
+        """
+        Mark a task as completed using its unique ID.
+        
+        Args:
+            task_id: The ID of the task to complete.
+        """
         try:
             uuid_id = UUID(task_id)
             return tools.complete_task(session, user_id, uuid_id)
@@ -97,7 +115,12 @@ def process_chat(session: Session, user_id: UUID, message: str, history: List[Co
             return f"Invalid Task ID format: {task_id}"
 
     def delete_task_tool(task_id: str):
-        """Delete task by ID."""
+        """
+        Delete a task permanently using its unique ID.
+        
+        Args:
+            task_id: The ID of the task to delete.
+        """
         try:
             uuid_id = UUID(task_id)
             return tools.delete_task(session, user_id, uuid_id)

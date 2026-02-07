@@ -71,7 +71,6 @@ export function TaskForm({ initialData, onSubmit, onCancel, isLoading }: TaskFor
             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Title</label>
             <input
               type="text"
-              required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 placeholder:text-muted-foreground/50"
