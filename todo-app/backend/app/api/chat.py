@@ -2,7 +2,6 @@ from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from pydantic import BaseModel
-from uuid import UUID
 
 from app.api import deps
 from app.core.db import get_session
@@ -27,14 +26,14 @@ def chat(
 ) -> Any:
     # 1. Fetch History (Context for Agent)
     # Get last 10 messages, ordered by timestamp ascending
-    user_id_str = str(current_user.id)
-    statement = select(Conversation).where(Conversation.user_id == user_id_str).order_by(Conversation.timestamp.desc()).limit(10)
+    user_id = current_user.id
+    statement = select(Conversation).where(Conversation.user_id == user_id).order_by(Conversation.timestamp.desc()).limit(10)
     history_desc = session.exec(statement).all()
     history = list(reversed(history_desc))
 
     # 2. Save User Message
     user_msg = Conversation(
-        user_id=user_id_str,
+        user_id=user_id,
         message_text=chat_request.message,
         role="user"
     )
@@ -43,7 +42,7 @@ def chat(
     
     # 3. Generate Response using Agent
     try:
-        response_text = process_chat(session, current_user.id, chat_request.message, history)
+        response_text = process_chat(session, user_id, chat_request.message, history)
     except Exception as e:
         import traceback
         print(f"CRITICAL ERROR IN process_chat: {str(e)}")
@@ -52,7 +51,7 @@ def chat(
 
     # 4. Save Assistant Response
     assistant_msg = Conversation(
-        user_id=user_id_str,
+        user_id=user_id,
         message_text=response_text or "I'm sorry, I couldn't generate a response.",
         role="assistant"
     )
@@ -68,7 +67,7 @@ def get_chat_history(
     skip: int = 0,
     limit: int = 50,
 ) -> Any:
-    user_id_str = str(current_user.id)
-    statement = select(Conversation).where(Conversation.user_id == user_id_str).order_by(Conversation.timestamp).offset(skip).limit(limit)
+    user_id = current_user.id
+    statement = select(Conversation).where(Conversation.user_id == user_id).order_by(Conversation.timestamp).offset(skip).limit(limit)
     conversations = session.exec(statement).all()
     return conversations

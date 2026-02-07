@@ -4,7 +4,6 @@ import time
 import re
 from datetime import datetime
 from typing import List, Dict, Any, Optional
-from uuid import UUID
 from sqlmodel import Session
 import google.generativeai as genai
 from google.generativeai.types import FunctionDeclaration, Tool
@@ -18,7 +17,7 @@ from app.core.config import settings
 if settings.GEMINI_API_KEY:
     genai.configure(api_key=settings.GEMINI_API_KEY)
 
-def emergency_local_fallback(session: Session, user_id: UUID, message: str) -> str:
+def emergency_local_fallback(session: Session, user_id: int, message: str) -> str:
     """
     Advanced regex fallback. Supports: Add, List, Delete by Name, Complete by Name.
     """
@@ -58,7 +57,7 @@ def emergency_local_fallback(session: Session, user_id: UUID, message: str) -> s
 
     return "I'm in Emergency Mode. Try 'Add milk', 'List tasks', 'Complete milk', or 'Delete milk'."
 
-def resolve_task_indices(session: Session, user_id: UUID, message: str) -> str:
+def resolve_task_indices(session: Session, user_id: int, message: str) -> str:
     pattern = r"(?:task|item|number|#)\s*(\d+)"
     matches = list(re.finditer(pattern, message, re.IGNORECASE))
     if not matches: return message
@@ -74,7 +73,7 @@ def resolve_task_indices(session: Session, user_id: UUID, message: str) -> str:
         except: pass
     return new_message
 
-def process_chat(session: Session, user_id: UUID, message: str, history: List[Conversation]) -> str:
+def process_chat(session: Session, user_id: int, message: str, history: List[Conversation]) -> str:
     if not settings.GEMINI_API_KEY:
         return "Please set GEMINI_API_KEY."
         
@@ -101,31 +100,23 @@ def process_chat(session: Session, user_id: UUID, message: str, history: List[Co
         """
         return tools.add_task(session, user_id, title, description=description, priority=priority, tags=tags).model_dump(mode='json')
 
-    def complete_task_tool(task_id: str):
+    def complete_task_tool(task_id: int):
         """
         Mark a task as completed using its unique ID.
         
         Args:
             task_id: The ID of the task to complete.
         """
-        try:
-            uuid_id = UUID(task_id)
-            return tools.complete_task(session, user_id, uuid_id)
-        except ValueError:
-            return f"Invalid Task ID format: {task_id}"
+        return tools.complete_task(session, user_id, int(task_id))
 
-    def delete_task_tool(task_id: str):
+    def delete_task_tool(task_id: int):
         """
         Delete a task permanently using its unique ID.
         
         Args:
             task_id: The ID of the task to delete.
         """
-        try:
-            uuid_id = UUID(task_id)
-            return tools.delete_task(session, user_id, uuid_id)
-        except ValueError:
-            return f"Invalid Task ID format: {task_id}"
+        return tools.delete_task(session, user_id, int(task_id))
 
     my_tools = [list_tasks_tool, add_task_tool, complete_task_tool, delete_task_tool]
     
