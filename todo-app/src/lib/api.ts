@@ -52,15 +52,24 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
     }
 
     if (!response.ok) {
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || `Server error: ${response.status}`);
-      } else {
-        const textError = await response.text();
-        console.error(`[API Error] Non-JSON error:`, textError);
-        throw new Error(`Server error (${response.status}). Please check backend logs.`);
+      let errorMessage = `Server error: ${response.status}`;
+      try {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorMessage;
+        } else {
+          const textError = await response.text();
+          console.error(`[API Error] Non-JSON error body:`, textError);
+          // If it's a 500, it might be a Python traceback. We don't want to show the whole thing, but a snippet helps.
+          if (response.status === 500) {
+             errorMessage = "Internal Server Error (Check Database/Env Vars)";
+          }
+        }
+      } catch (e) {
+        console.error("[API Error] Failed to parse error response", e);
       }
+      throw new Error(errorMessage);
     }
 
     return response;

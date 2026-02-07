@@ -65,18 +65,14 @@ export function ChatWidget() {
         body: JSON.stringify({ message: userMsg.message_text })
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        const assistantMsg: Message = { role: 'assistant', message_text: data.response };
-        setMessages(prev => [...prev, assistantMsg]);
-        triggerRefresh();
-        showToast("Dashboard updated", "info");
-      } else {
-        showToast("Failed to send message", "error");
-      }
-    } catch (error) {
+      const data = await res.json();
+      const assistantMsg: Message = { role: 'assistant', message_text: data.response };
+      setMessages(prev => [...prev, assistantMsg]);
+      triggerRefresh();
+      showToast("Dashboard updated", "info");
+    } catch (error: any) {
       console.error("Chat error", error);
-      showToast("Something went wrong", "error");
+      showToast(error.message || "Something went wrong", "error");
     } finally {
       setIsLoading(false);
     }

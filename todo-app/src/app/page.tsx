@@ -44,6 +44,14 @@ export default function Home() {
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
         loadTasks();
+        // Background diagnostic check
+        fetchWithAuth('/db-check').then(res => res.json()).then(data => {
+          console.log("[Diagnostics] DB Check:", data);
+        }).catch(err => console.error("[Diagnostics] DB Check Failed:", err));
+        
+        fetchWithAuth('/debug-settings').then(res => res.json()).then(data => {
+          console.log("[Diagnostics] Settings Check:", data);
+        }).catch(err => console.error("[Diagnostics] Settings Check Failed:", err));
     }
   }, [authLoading, isAuthenticated, refreshKey]);
 
@@ -82,9 +90,9 @@ export default function Home() {
         setShowCreateModal(false);
         showToast("Task created successfully!", "success");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to create task', error);
-      showToast("Failed to create task.", "error");
+      showToast(error.message || "Failed to create task.", "error");
     } finally {
       setFormLoading(false);
     }
