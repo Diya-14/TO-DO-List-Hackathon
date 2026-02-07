@@ -5,8 +5,15 @@ from .config import settings
 engine_args = {}
 if settings.DATABASE_URL.startswith("sqlite"):
     engine_args = {"connect_args": {"check_same_thread": False}}
+elif os.getenv("VERCEL"):
+    # For Vercel, avoid connection pooling as it's typically handled by the platform
+    # or by a connection proxy like PgBouncer for serverless DBs.
+    # Set pool_pre_ping to True to ensure connections are healthy.
+    engine_args = {
+        "pool_pre_ping": True,
+    }
 else:
-    # Postgres/Neon optimizations
+    # Postgres/Neon optimizations for non-serverless environments
     engine_args = {
         "pool_pre_ping": True,
         "pool_recycle": 300,

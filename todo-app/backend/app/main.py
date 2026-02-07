@@ -27,14 +27,16 @@ from app.api import auth, tasks, chat
 async def lifespan(app: FastAPI):
     print(f"DEBUG: Starting lifespan. Database URL: {settings.DATABASE_URL[:20]}...")
     try:
-        # In production, we'd use Alembic for migrations, but for hackathon speed/CLI alignment we can use create_all
-        init_db()
-        print("DEBUG: Database connected and initialized successfully.")
+        # In serverless, database migrations should be handled as part of the build step
+        # or manually, not on every function invocation during lifespan.
+        # Ensure your database is migrated using `backend/scripts/db_migrate.py`
+        # if this is a fresh deployment or schema changes are made.
+        print("DEBUG: Database connection will be initialized on first access via get_session().")
     except Exception as e:
         import traceback
-        print(f"CRITICAL DATABASE CONNECTION ERROR: {e}")
+        print(f"CRITICAL ERROR during lifespan setup (not db init): {e}")
         traceback.print_exc()
-        print("Server starting, but database features will fail until fixed.")
+        print("Server starting, but an unexpected error occurred during lifespan.")
     yield
     print("DEBUG: Shutting down lifespan.")
 

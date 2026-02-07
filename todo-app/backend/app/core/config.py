@@ -21,12 +21,7 @@ class Settings(BaseSettings):
 
     if not DATABASE_URL:
         if os.getenv("VERCEL"):
-            # On Vercel, we MUST have a DATABASE_URL set in the dashboard.
-            # Falling back to SQLite will fail because the filesystem is read-only.
-            print("CRITICAL: DATABASE_URL is not set in Vercel environment variables!")
-            # We don't raise an exception here to allow the app to start and show a health check,
-            # but we'll set it to a dummy value that will fail clearly later.
-            DATABASE_URL = "postgresql://missing_db_url_in_vercel_dashboard"
+            raise ValueError("CRITICAL: DATABASE_URL is not set in Vercel environment variables! Please configure it in your Vercel project settings.")
         else:
             # Use absolute path for SQLite database to ensure persistence across different working directories
             BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
