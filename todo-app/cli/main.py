@@ -44,8 +44,18 @@ def interactive_mode():
                 list(status=None, priority=None)
             elif choice == "3":
                 task_id = Prompt.ask("Enter Task ID to update")
-                text = Prompt.ask("Enter changes (e.g., 'high priority')")
-                update(task_id=task_id, text=text, title=None, priority=None, due=None)
+                text = Prompt.ask("Enter changes via Natural Language (optional)", default="")
+                title_input = Prompt.ask("Enter new Title (optional)", default="")
+                priority_input = Prompt.ask("Enter new Priority (low/medium/high/none)", default="none", choices=["low", "medium", "high", "none"])
+                due_input = Prompt.ask("Enter new Due Date (optional)", default="")
+                
+                # Convert inputs to appropriate types for the update command
+                text_arg = text if text.strip() else None
+                title_arg = title_input if title_input.strip() else None
+                priority_arg = priority_input if priority_input != "none" else None
+                due_arg = due_input if due_input.strip() else None
+                
+                update(task_id=task_id, text=text_arg, title=title_arg, priority=priority_arg, due=due_arg)
             elif choice == "4":
                 task_id = Prompt.ask("Enter Task ID to complete")
                 complete(task_id)

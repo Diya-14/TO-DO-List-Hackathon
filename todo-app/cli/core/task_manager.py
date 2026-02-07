@@ -103,7 +103,17 @@ class TaskManager:
     def update_task(self, task_id: str, updates: dict) -> Task:
         """
         Updates an existing task with the provided fields.
-        'updates' should be a dict of field names and new values.
+        
+        Args:
+            task_id: The full ID or unique short ID prefix of the task.
+            updates: A dictionary containing field names (e.g., 'title', 'priority', 'due_date') 
+                     and their new values.
+        
+        Returns:
+            The updated Task object.
+            
+        Raises:
+            ValueError: If the task_id is not found or is ambiguous.
         """
         tasks = self.persistence.load_tasks()
         

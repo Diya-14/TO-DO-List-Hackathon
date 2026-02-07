@@ -60,12 +60,20 @@ def add(
 @app.command()
 def update(
     task_id: str = typer.Argument(..., help="Full UUID or 8-char short ID"),
-    text: Optional[str] = typer.Argument(None, help="Natural language description of changes"),
+    text: Optional[str] = typer.Argument(None, help="Natural language description of changes (e.g., 'buy milk tomorrow high priority')"),
     title: Optional[str] = typer.Option(None, help="Explicitly set the title"),
-    priority: Optional[Priority] = typer.Option(None, help="Explicitly set priority"),
-    due: Optional[str] = typer.Option(None, help="Explicitly set due date")
+    priority: Optional[Priority] = typer.Option(None, help="Explicitly set priority (low, medium, high)"),
+    due: Optional[str] = typer.Option(None, help="Explicitly set due date (e.g., '2023-12-31')")
 ):
-    """Update an existing task."""
+    """
+    Update an existing task's properties.
+    
+    You can use natural language (the 'text' argument) to describe changes, 
+    or use explicit flags (--title, --priority, --due) for precise control.
+    Explicit flags take precedence over natural language parsing results.
+    
+    The task is identified by its ID (full or unique prefix).
+    """
     console = Console()
     tm = get_task_manager_instance()
     parser = NLParser() # Initialize parser here
@@ -89,7 +97,7 @@ def update(
             if parsed_due:
                 updates["due_date"] = parsed_due
             else:
-                print(f"Warning: Could not parse due date '{due}'. Skipping.")
+                console.print(f"[yellow]Warning: Could not parse due date '{due}'. Skipping.[/yellow]")
 
         if not updates:
             console.print("[yellow]No changes provided.[/yellow]")

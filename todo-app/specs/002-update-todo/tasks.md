@@ -20,33 +20,33 @@
 **Goal**: Enable updating task properties via natural language.
 **Story**: [US1] Update Task Title and Details
 
-- [ ] T006 [US1] Extend `NLParser` to support partial parsing for updates in `src/skills/nlp.py`
-- [ ] T007 [US1] Implement `update` command basic structure in `src/cli/commands.py`
-- [ ] T008 [US1] Integrate `NLParser` into `update` command in `src/cli/commands.py`
-- [ ] T009 [US1] Create integration tests for NLP-based updates in `tests/integration/test_cli_update.py`
+- [x] T006 [US1] Extend `NLParser` to support partial parsing for updates in `src/skills/nlp.py`
+- [x] T007 [US1] Implement `update` command basic structure in `src/cli/commands.py`
+- [x] T008 [US1] Integrate `NLParser` into `update` command in `src/cli/commands.py`
+- [x] T009 [US1] Create integration tests for NLP-based updates in `tests/integration/test_cli_update.py`
 
 ## Phase 4: User Story 2 - Update Task via CLI Options (Priority: P2)
 **Goal**: Provide explicit CLI flags for targeted task updates.
 **Story**: [US2] Update Task via CLI Options
 
-- [ ] T010 [US2] Add `--title`, `--priority`, and `--due` options to `update` command in `src/cli/commands.py`
-- [ ] T011 [US2] Implement CLI flag precedence over NLP results in `src/cli/commands.py`
-- [ ] T012 [US2] Create integration tests for CLI flag updates in `tests/integration/test_cli_update.py`
+- [x] T010 [US2] Add `--title`, `--priority`, and `--due` options to `update` command in `src/cli/commands.py`
+- [x] T011 [US2] Implement CLI flag precedence over NLP results in `src/cli/commands.py`
+- [x] T012 [US2] Create integration tests for CLI flag updates in `tests/integration/test_cli_update.py`
 
 ## Phase 5: User Story 3 - Error Handling (Priority: P3)
 **Goal**: Ensure robust error reporting for missing or ambiguous tasks.
 **Story**: [US3] Error Handling for Missing Tasks
 
-- [ ] T013 [US3] Implement "Task not found" error reporting in `src/cli/commands.py`
-- [ ] T014 [US3] Implement "Ambiguous short ID" error reporting in `src/cli/commands.py`
-- [ ] T015 [US3] Create integration tests for error scenarios in `tests/integration/test_cli_update.py`
+- [x] T013 [US3] Implement "Task not found" error reporting in `src/cli/commands.py`
+- [x] T014 [US3] Implement "Ambiguous short ID" error reporting in `src/cli/commands.py`
+- [x] T015 [US3] Create integration tests for error scenarios in `tests/integration/test_cli_update.py`
 
 ## Phase 6: Polish & Cross-Cutting
 **Goal**: Finalize documentation and performance.
 
-- [ ] T016 Audit update command performance (<500ms) in `tests/performance/test_startup.py`
-- [ ] T017 Update docstrings and documentation for the new command in `src/`
-- [ ] T018 Final manual QA pass for Update Todo in `qa_checklist.md`
+- [x] T016 Audit update command performance (<500ms) in `tests/performance/test_startup.py`
+- [x] T017 Update docstrings and documentation for the new command in `src/`
+- [x] T018 Final manual QA pass for Update Todo in `qa_checklist.md`
 
 ## Dependencies
 
