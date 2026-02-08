@@ -60,7 +60,7 @@ export function ChatWidget() {
     setIsLoading(true);
 
     try {
-      const res = await fetchWithAuth('/chat/', {
+      const res = await fetchWithAuth('/chat', {
         method: 'POST',
         body: JSON.stringify({ message: userMsg.message_text })
       });

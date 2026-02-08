@@ -14,7 +14,7 @@ export interface ChatResponse {
 export const chatApi = {
   // Send a message and get a response
   sendMessage: async (message: string): Promise<ChatResponse> => {
-    const res = await fetchWithAuth('/chat/', {
+    const res = await fetchWithAuth('/chat', {
       method: 'POST',
       body: JSON.stringify({ message }),
     });
