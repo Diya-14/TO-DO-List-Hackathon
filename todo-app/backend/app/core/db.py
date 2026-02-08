@@ -1,5 +1,12 @@
 from sqlmodel import SQLModel, create_engine, Session
 from .config import settings
+import os
+
+# Import all models to ensure they are registered with SQLModel.metadata
+# before calling SQLModel.metadata.create_all(engine)
+from app.models.user import User
+from app.models.task import Task
+from app.models.conversation import Conversation
 
 # For SQLite, we need to allow multiple threads to access the same connection
 engine_args = {}

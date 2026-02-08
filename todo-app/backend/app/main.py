@@ -27,16 +27,17 @@ from app.api import auth, tasks, chat
 async def lifespan(app: FastAPI):
     print(f"DEBUG: Starting lifespan. Database URL: {settings.DATABASE_URL[:20]}...")
     try:
-        # In serverless, database migrations should be handled as part of the build step
-        # or manually, not on every function invocation during lifespan.
-        # Ensure your database is migrated using `backend/scripts/db_migrate.py`
-        # if this is a fresh deployment or schema changes are made.
-        print("DEBUG: Database connection will be initialized on first access via get_session().")
+        # Automatically create tables if they don't exist.
+        # This is helpful for hackathons/prototypes to ensure the DB is ready
+        # without manual migration steps.
+        print("DEBUG: Initializing database tables...")
+        init_db()
+        print("DEBUG: Database tables initialized successfully.")
     except Exception as e:
         import traceback
-        print(f"CRITICAL ERROR during lifespan setup (not db init): {e}")
+        print(f"CRITICAL ERROR during lifespan setup: {e}")
         traceback.print_exc()
-        print("Server starting, but an unexpected error occurred during lifespan.")
+        print("Server starting, but an unexpected error occurred during database initialization.")
     yield
     print("DEBUG: Shutting down lifespan.")
 
