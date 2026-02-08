@@ -58,7 +58,7 @@ export default function Home() {
   const loadTasks = async () => {
     try {
       setLoading(true);
-      const res = await fetchWithAuth('/tasks/');
+      const res = await fetchWithAuth('/tasks');
       if (res.ok) {
         const data = await res.json();
         setTasks(data);
@@ -84,7 +84,7 @@ export default function Home() {
   const handleCreateTask = async (data: any) => {
     setFormLoading(true);
     try {
-      const res = await fetchWithAuth('/tasks/', {
+      const res = await fetchWithAuth('/tasks', {
         method: 'POST',
         body: JSON.stringify(data)
       });

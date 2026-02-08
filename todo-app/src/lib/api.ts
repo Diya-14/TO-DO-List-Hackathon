@@ -29,19 +29,29 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  // Normalize endpoint: ensure it starts with /
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  // Normalize endpoint: ensure it starts with / and DOES NOT end with /
+  let cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  if (cleanEndpoint.endsWith('/') && cleanEndpoint.length > 1) {
+    cleanEndpoint = cleanEndpoint.slice(0, -1);
+  }
   
   const url = `${API_URL}${cleanEndpoint}`;
 
   try {
     console.log(`[API Request] ${options.method || 'GET'} -> ${url}`);
+    
+    // Create a controller to handle potential timeouts
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
     const response = await fetch(url, {
       ...options,
       headers,
+      signal: controller.signal,
       cache: 'no-store',
     });
     
+    clearTimeout(timeoutId);
     console.log(`[API Response] ${response.status} from ${url}`);
 
     if (response.status === 401) {

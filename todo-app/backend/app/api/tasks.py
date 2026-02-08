@@ -9,7 +9,7 @@ from app.models.user import User
 
 router = APIRouter()
 
-@router.get("/", response_model=List[TaskRead])
+@router.get("", response_model=List[TaskRead])
 def read_tasks(
     session: Session = Depends(get_session),
     current_user: User = Depends(deps.get_current_user),
@@ -22,7 +22,7 @@ def read_tasks(
     print(f"DEBUG: Found {len(tasks)} tasks")
     return tasks
 
-@router.post("/", response_model=TaskRead)
+@router.post("", response_model=TaskRead)
 def create_task(
     *,
     session: Session = Depends(get_session),

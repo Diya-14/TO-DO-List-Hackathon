@@ -61,12 +61,13 @@ async def statement_error_handler(request, exc):
     )
 
 # CORS must be added BEFORE routers to handle preflight requests correctly
+# We explicitly allow Authorization and Content-Type to avoid 'Failed to fetch' errors
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=False,
+    allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
 )
 
 @app.get("/db-check")
