@@ -449,38 +449,3 @@ function QuickStatCard({ label, value, icon }: any) {
         </div>
     )
 }
-
-function SidebarItem({ icon, label, active, onClick, count }: any) {
-    return (
-        <button 
-            onClick={onClick}
-            className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold transition-all ${
-                active 
-                ? 'bg-primary/10 text-primary shadow-sm' 
-                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-            }`}
-        >
-            <div className="flex items-center gap-3">
-                {icon}
-                <span>{label}</span>
-            </div>
-            {count !== undefined && (
-                <span className={`rounded-full px-2 py-0.5 text-[10px] ${active ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'}`}>
-                    {count}
-                </span>
-            )}
-        </button>
-    )
-}
-
-function QuickStatCard({ label, value, icon }: any) {
-    return (
-        <div className="flex flex-col rounded-3xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md">
-            <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
-                {icon}
-            </div>
-            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
-            <p className="mt-1 text-3xl font-black">{value}</p>
-        </div>
-    )
-}
