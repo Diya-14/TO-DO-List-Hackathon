@@ -5,16 +5,16 @@ import { Calendar, Trash2, Edit2, CheckCircle2, Circle, Clock, Tag } from 'lucid
 import { motion } from 'framer-motion';
 
 interface TaskCardProps {
-  id: string;
+  id: string | number;
   title: string;
   description: string;
   status: 'pending' | 'in-progress' | 'completed';
   priority: 'low' | 'medium' | 'high';
   due_date?: string;
   tags?: string[];
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
-  onStatusChange: (id: string, status: string) => void;
+  onEdit: (id: string | number) => void;
+  onDelete: (id: string | number) => void;
+  onStatusChange: (id: string | number, status: string) => void;
 }
 
 const priorityStyles = {
@@ -50,7 +50,7 @@ export function TaskCard({ id, title, description, status, priority, due_date, t
             <Edit2 className="h-4 w-4" />
           </button>
           <button 
-            onClick={() => { if(confirm('Delete task?')) onDelete(id); }}
+            onClick={() => onDelete(id)}
             className="rounded-lg p-2 text-muted-foreground hover:bg-rose-500/10 hover:text-rose-600 transition-colors"
           >
             <Trash2 className="h-4 w-4" />

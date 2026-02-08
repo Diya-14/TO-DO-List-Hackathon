@@ -14,7 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { LandingPage } from "@/components/LandingPage";
 
 interface Task {
-  id: string;
+  id: string | number;
   title: string;
   description: string;
   status: 'pending' | 'in-progress' | 'completed';
@@ -69,9 +69,13 @@ export default function Home() {
         console.error('Server error:', errData);
         showToast(errData.detail || "Failed to load tasks.", "error");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Network or Connection error:', error);
-      showToast("Connection error. Is the backend running?", "error");
+      // More descriptive error for 'Failed to fetch' which often means CORS or connection refused
+      const msg = error.message === 'Failed to fetch' 
+        ? "Network error: Could not reach the backend. Check your internet or backend status." 
+        : (error.message || "Failed to load tasks.");
+      showToast(msg, "error");
     } finally {
       setLoading(false);
     }
@@ -113,16 +117,17 @@ export default function Home() {
         setEditingTask(null);
         showToast("Task updated successfully!", "success");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to update task', error);
-      showToast("Failed to update task.", "error");
+      showToast(error.message || "Failed to update task.", "error");
     } finally {
       setFormLoading(false);
     }
   };
 
-  const handleDeleteTask = (id: string) => {
-    const task = tasks.find(t => t.id === id);
+  const handleDeleteTask = (id: string | number) => {
+    // Use == to handle string vs number comparison
+    const task = tasks.find(t => t.id == id);
     if (task) {
       setTaskToDelete(task);
       setShowDeleteModal(true);
@@ -136,22 +141,22 @@ export default function Home() {
     try {
       const res = await fetchWithAuth(`/tasks/${taskToDelete.id}`, { method: 'DELETE' });
       if (res.ok) {
-        setTasks(prev => prev.filter(t => t.id !== taskToDelete.id));
+        setTasks(prev => prev.filter(t => t.id != taskToDelete.id));
         setShowDeleteModal(false);
         setTaskToDelete(null);
         showToast("Task deleted successfully!", "delete");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to delete task', error);
-      showToast("Failed to delete task.", "error");
+      showToast(error.message || "Failed to delete task.", "error");
     } finally {
       setFormLoading(false);
     }
   };
 
-  const handleStatusChange = async (id: string, newStatus: string) => {
+  const handleStatusChange = async (id: string | number, newStatus: string) => {
       try {
-        setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus as any } : t));
+        setTasks(prev => prev.map(t => t.id == id ? { ...t, status: newStatus as any } : t));
         const res = await fetchWithAuth(`/tasks/${id}`, {
             method: 'PATCH',
             body: JSON.stringify({ status: newStatus })
@@ -165,8 +170,8 @@ export default function Home() {
       }
   }
 
-  const openEditModal = (id: string) => {
-      const task = tasks.find(t => t.id === id);
+  const openEditModal = (id: string | number) => {
+      const task = tasks.find(t => t.id == id);
       if (task) {
           setEditingTask(task);
           setShowEditModal(true);
