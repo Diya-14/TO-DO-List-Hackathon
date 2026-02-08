@@ -53,20 +53,20 @@ export function LandingPage() {
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/30">
       {/* Navigation */}
       <nav className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto flex h-16 items-center justify-between px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
-              <CheckSquare className="h-6 w-6" />
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
+              <CheckSquare className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
-            <span className="text-2xl font-black tracking-tight">
+            <span className="text-xl sm:text-2xl font-black tracking-tight">
               Hack<span className="text-primary">Do</span>
             </span>
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Link href="/login" className="text-xs sm:text-sm font-bold text-muted-foreground hover:text-foreground transition-colors">
               Sign In
             </Link>
-            <Link href="/signup" className="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all hover:-translate-y-0.5">
+            <Link href="/signup" className="rounded-lg sm:rounded-xl bg-primary px-4 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all hover:-translate-y-0.5">
               Get Started
             </Link>
           </div>
@@ -74,10 +74,10 @@ export function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 pb-20 lg:pt-48 lg:pb-32">
+      <section className="relative overflow-hidden pt-28 pb-16 lg:pt-48 lg:pb-32">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl -z-10 opacity-20">
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[120px]" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[120px]" />
+            <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary/30 rounded-full blur-[80px] sm:blur-[120px]" />
+            <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-indigo-500/20 rounded-full blur-[80px] sm:blur-[120px]" />
         </div>
 
         <div className="container mx-auto px-6 text-center">
@@ -86,23 +86,23 @@ export function LandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary uppercase tracking-widest mb-6">
+            <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-[10px] sm:text-xs font-bold text-primary uppercase tracking-widest mb-6">
               The Ultimate Task Manager
             </span>
-            <h1 className="mx-auto max-w-4xl text-5xl font-black tracking-tight sm:text-7xl leading-[1.1]">
-              Organize your work <br />
+            <h1 className="mx-auto max-w-4xl text-4xl font-black tracking-tight sm:text-7xl leading-[1.2] sm:leading-[1.1]">
+              Organize your work <br className="hidden sm:block" />
               <span className="text-primary">elevate your life.</span>
             </h1>
-            <p className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground font-medium">
+            <p className="mx-auto mt-6 sm:mt-8 max-w-2xl text-base sm:text-lg text-muted-foreground font-medium">
               HackDo is the next-generation task tracker designed for creators. 
               Stay focused, meet your deadlines, and achieve your goals with elegance.
             </p>
-            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/signup" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl bg-primary px-10 py-5 text-lg font-black text-white shadow-2xl shadow-primary/30 hover:bg-primary/90 transition-all hover:-translate-y-1">
+            <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0">
+              <Link href="/signup" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl bg-primary px-8 py-4 sm:px-10 sm:py-5 text-base sm:text-lg font-black text-white shadow-2xl shadow-primary/30 hover:bg-primary/90 transition-all hover:-translate-y-1">
                 Get Started Free
                 <ArrowRight className="h-5 w-5" />
               </Link>
-              <button onClick={() => document.getElementById('tutorial')?.scrollIntoView({ behavior: 'smooth' })} className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl border border-border bg-card px-10 py-5 text-lg font-bold hover:bg-muted transition-all">
+              <button onClick={() => document.getElementById('tutorial')?.scrollIntoView({ behavior: 'smooth' })} className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl border border-border bg-card px-8 py-4 sm:px-10 sm:py-5 text-base sm:text-lg font-bold hover:bg-muted transition-all">
                 How it works
               </button>
             </div>
@@ -111,26 +111,26 @@ export function LandingPage() {
       </section>
 
       {/* Why Section */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl font-black tracking-tight sm:text-5xl">Why choose HackDo?</h2>
-            <p className="mt-4 text-muted-foreground font-medium">Built for speed, privacy, and productivity.</p>
+            <p className="mt-4 text-sm sm:text-base text-muted-foreground font-medium">Built for speed, privacy, and productivity.</p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
             <FeatureCard 
-              icon={<Zap className="h-8 w-8 text-amber-500" />}
+              icon={<Zap className="h-6 w-6 sm:h-8 sm:w-8 text-amber-500" />}
               title="Lightning Fast"
               description="Built with Next.js and FastAPI, HackDo feels instant. No more waiting for pages to load."
             />
             <FeatureCard 
-              icon={<Shield className="h-8 w-8 text-emerald-500" />}
+              icon={<Shield className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-500" />}
               title="Secure & Private"
               description="Your data is your own. We use enterprise-grade encryption to keep your tasks safe."
             />
             <FeatureCard 
-              icon={<Layout className="h-8 w-8 text-primary" />}
+              icon={<Layout className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />}
               title="Beautiful UI"
               description="A professional SaaS aesthetic that inspires you to get things done every single day."
             />
@@ -139,16 +139,15 @@ export function LandingPage() {
       </section>
 
       {/* Tutorial Section */}
-      <section id="tutorial" className="py-24 overflow-hidden">
+      <section id="tutorial" className="py-16 sm:py-24 overflow-hidden">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row gap-16 items-center">
-            <div className="flex-1 space-y-8">
+          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+            <div className="w-full lg:flex-1 space-y-8">
               <div>
-                <span className="text-primary font-black uppercase tracking-widest text-sm">Step-by-Step Guide</span>
-                <h2 className="text-4xl font-black tracking-tight mt-2 sm:text-6xl">What is HackDo?</h2>
-                <p className="mt-4 text-lg text-muted-foreground font-medium">
+                <span className="text-primary font-black uppercase tracking-widest text-xs sm:text-sm">Step-by-Step Guide</span>
+                <h2 className="text-3xl font-black tracking-tight mt-2 sm:text-6xl">What is HackDo?</h2>
+                <p className="mt-4 text-base sm:text-lg text-muted-foreground font-medium">
                   HackDo is a professional productivity suite designed to help you organize your life. 
-                  We use it to stay on top of deadlines, collaborate with teams, and clear mental clutter.
                 </p>
               </div>
 
@@ -157,30 +156,30 @@ export function LandingPage() {
                   <button
                     key={index}
                     onClick={() => setActiveStep(index)}
-                    className={`flex w-full items-start gap-4 rounded-3xl p-6 text-left transition-all ${
+                    className={`flex w-full items-start gap-4 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-left transition-all ${
                       activeStep === index 
                       ? 'bg-card border border-border shadow-xl shadow-primary/5' 
                       : 'hover:bg-muted/50 opacity-60'
                     }`}
                   >
-                    <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
+                    <div className={`flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl ${
                       activeStep === index ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
                     }`}>
                       {step.icon}
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold">{step.title}</h4>
+                      <h4 className="text-lg sm:text-xl font-bold">{step.title}</h4>
                       {activeStep === index && (
                         <motion.div 
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                         >
-                          <p className="mt-2 text-muted-foreground leading-relaxed mb-4">
+                          <p className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed mb-4">
                             {step.description}
                           </p>
                           {index === tutorialSteps.length - 1 && (
-                            <Link href="/login" className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-black text-white shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
-                              I'm Ready, Take me to Login
+                            <Link href="/login" className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-black text-white shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+                              Take me to Login
                               <ArrowRight className="h-4 w-4" />
                             </Link>
                           )}
@@ -192,14 +191,14 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="flex-1 relative">
+            <div className="w-full lg:flex-1 relative">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeStep}
                     initial={{ opacity: 0, scale: 0.9, x: 20 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.9, x: -20 }}
-                    className="relative aspect-square w-full overflow-hidden rounded-[48px] border-8 border-card shadow-2xl"
+                    className="relative aspect-video sm:aspect-square w-full overflow-hidden rounded-[32px] sm:rounded-[48px] border-4 sm:border-8 border-card shadow-2xl"
                   >
                     <img 
                       src={tutorialSteps[activeStep].image} 
@@ -209,21 +208,17 @@ export function LandingPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   </motion.div>
                 </AnimatePresence>
-                
-                {/* Decorative Elements */}
-                <div className="absolute -top-6 -right-6 h-32 w-32 bg-primary/10 rounded-full blur-3xl -z-10" />
-                <div className="absolute -bottom-10 -left-10 h-40 w-40 bg-indigo-500/10 rounded-full blur-3xl -z-10" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="py-24">
-        <div className="container mx-auto px-6">
-          <div className="rounded-[48px] bg-primary p-12 lg:p-24 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/30">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48" />
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -ml-48 -mb-48" />
+      <section className="py-16 sm:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="rounded-[32px] sm:rounded-[48px] bg-primary p-8 sm:p-12 lg:p-24 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/30">
+            <div className="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32 sm:-mr-48 sm:-mt-48" />
+            <div className="absolute bottom-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-white/10 rounded-full blur-3xl -ml-32 -mb-32 sm:-ml-48 sm:-mb-48" />
             
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -231,16 +226,16 @@ export function LandingPage() {
               viewport={{ once: true }}
               className="relative z-10"
             >
-              <h2 className="text-4xl font-black tracking-tight sm:text-6xl">Ready to boost your speed?</h2>
-              <p className="mx-auto mt-8 max-w-xl text-lg font-bold opacity-80">
-                Join thousands of creators who use HackDo to manage their daily tasks and projects.
+              <h2 className="text-3xl sm:text-6xl font-black tracking-tight">Ready to boost your speed?</h2>
+              <p className="mx-auto mt-6 sm:mt-8 max-w-xl text-base sm:text-lg font-bold opacity-80">
+                Join thousands of creators who use HackDo to manage their daily tasks.
               </p>
-              <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link href="/signup" className="w-full sm:w-auto rounded-2xl bg-white px-10 py-5 text-lg font-black text-primary shadow-xl transition-all hover:-translate-y-1 hover:bg-slate-50">
-                  Create My Account
+              <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0">
+                <Link href="/signup" className="w-full sm:w-auto rounded-2xl bg-white px-8 py-4 sm:px-10 sm:py-5 text-base sm:text-lg font-black text-primary shadow-xl transition-all hover:-translate-y-1 hover:bg-slate-50">
+                  Create Account
                 </Link>
-                <Link href="/login" className="w-full sm:w-auto rounded-2xl border-2 border-white/30 bg-white/10 px-10 py-5 text-lg font-bold backdrop-blur-sm transition-all hover:bg-white/20">
-                  Already a member?
+                <Link href="/login" className="w-full sm:w-auto rounded-2xl border-2 border-white/30 bg-white/10 px-8 py-4 sm:px-10 sm:py-5 text-base sm:text-lg font-bold backdrop-blur-sm transition-all hover:bg-white/20">
+                  Sign In
                 </Link>
               </div>
             </motion.div>
@@ -249,7 +244,7 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12 bg-muted/20">
+      <footer className="border-t border-border py-8 sm:py-12 bg-muted/20">
         <div className="container mx-auto px-6 text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
@@ -257,8 +252,8 @@ export function LandingPage() {
             </div>
             <span className="text-xl font-bold">HackDo</span>
           </div>
-          <p className="text-sm text-muted-foreground font-medium">
-            &copy; 2026 HackDo. All rights reserved. Created for productivity.
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+            &copy; 2026 HackDo. All rights reserved.
           </p>
         </div>
       </footer>

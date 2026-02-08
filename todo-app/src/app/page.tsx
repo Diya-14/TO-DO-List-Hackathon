@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/Sidebar";
 import { TaskCard } from "@/components/TaskCard";
 import { TaskForm } from "@/components/TaskForm";
 import { fetchWithAuth } from "@/lib/api";
@@ -31,6 +32,7 @@ export default function Home() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [formLoading, setFormLoading] = useState(false);
@@ -44,14 +46,6 @@ export default function Home() {
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
         loadTasks();
-        // Background diagnostic check
-        fetchWithAuth('/db-check').then(res => res.json()).then(data => {
-          console.log("[Diagnostics] DB Check:", data);
-        }).catch(err => console.error("[Diagnostics] DB Check Failed:", err));
-        
-        fetchWithAuth('/debug-settings').then(res => res.json()).then(data => {
-          console.log("[Diagnostics] Settings Check:", data);
-        }).catch(err => console.error("[Diagnostics] Settings Check Failed:", err));
     }
   }, [authLoading, isAuthenticated, refreshKey]);
 
@@ -66,14 +60,12 @@ export default function Home() {
         logout();
       } else {
         const errData = await res.json().catch(() => ({}));
-        console.error('Server error:', errData);
         showToast(errData.detail || "Failed to load tasks.", "error");
       }
     } catch (error: any) {
       console.error('Network or Connection error:', error);
-      // More descriptive error for 'Failed to fetch' which often means CORS or connection refused
       const msg = error.message === 'Failed to fetch' 
-        ? "Network error: Could not reach the backend. Check your internet or backend status." 
+        ? "Network error: Could not reach the backend." 
         : (error.message || "Failed to load tasks.");
       showToast(msg, "error");
     } finally {
@@ -95,7 +87,6 @@ export default function Home() {
         showToast("Task created successfully!", "success");
       }
     } catch (error: any) {
-      console.error('Failed to create task', error);
       showToast(error.message || "Failed to create task.", "error");
     } finally {
       setFormLoading(false);
@@ -118,7 +109,6 @@ export default function Home() {
         showToast("Task updated successfully!", "success");
       }
     } catch (error: any) {
-      console.error('Failed to update task', error);
       showToast(error.message || "Failed to update task.", "error");
     } finally {
       setFormLoading(false);
@@ -126,7 +116,6 @@ export default function Home() {
   };
 
   const handleDeleteTask = (id: string | number) => {
-    // Use == to handle string vs number comparison
     const task = tasks.find(t => t.id == id);
     if (task) {
       setTaskToDelete(task);
@@ -147,7 +136,6 @@ export default function Home() {
         showToast("Task deleted successfully!", "delete");
       }
     } catch (error: any) {
-      console.error('Failed to delete task', error);
       showToast(error.message || "Failed to delete task.", "error");
     } finally {
       setFormLoading(false);
@@ -179,7 +167,6 @@ export default function Home() {
   };
 
   const filteredTasks = tasks.filter(task => {
-      // Filter by Search Query
       if (searchQuery) {
           const query = searchQuery.toLowerCase();
           const matchesSearch = 
@@ -190,7 +177,6 @@ export default function Home() {
           if (!matchesSearch) return false;
       }
 
-      // Filter by Tab
       if (activeTab === 'All Tasks') return true;
       if (activeTab === 'Completed') return task.status === 'completed';
       if (activeTab === 'Important') return task.priority === 'high';
@@ -233,58 +219,34 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      {/* Sidebar */}
-      <aside className="fixed bottom-0 left-0 top-0 hidden w-72 border-r border-border bg-card lg:block">
-        <div className="flex h-16 items-center px-8">
-            <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold">H</div>
-                <span className="text-xl font-bold tracking-tight">HackDo <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded ml-1">v2.0</span></span>
-            </div>
-        </div>
-        
-        <div className="p-4 space-y-6">
-            <div className="space-y-1">
-                <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Main Menu</p>
-                <SidebarItem icon={<ListTodo className="h-4 w-4" />} label="All Tasks" active={activeTab === 'All Tasks'} onClick={() => handleTabChange('All Tasks')} count={stats.total} />
-                <SidebarItem icon={<Calendar className="h-4 w-4" />} label="Planned" active={activeTab === 'Planned'} onClick={() => handleTabChange('Planned')} />
-                <SidebarItem icon={<Star className="h-4 w-4" />} label="Important" active={activeTab === 'Important'} onClick={() => handleTabChange('Important')} />
-                <SidebarItem icon={<CheckCircle2 className="h-4 w-4" />} label="Completed" active={activeTab === 'Completed'} onClick={() => handleTabChange('Completed')} count={stats.done} />
-            </div>
-
-            <div className="space-y-1">
-                <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Categories</p>
-                <SidebarItem icon={<Briefcase className="h-4 w-4" />} label="Work" active={activeTab === 'Work'} onClick={() => handleTabChange('Work')} />
-                <SidebarItem icon={<User className="h-4 w-4" />} label="Personal" active={activeTab === 'Personal'} onClick={() => handleTabChange('Personal')} />
-            </div>
-        </div>
-
-        <div className="absolute bottom-6 left-6 right-6">
-            <div className="rounded-2xl bg-primary p-6 text-white shadow-xl shadow-primary/20">
-                <p className="text-xs font-bold opacity-80 uppercase tracking-widest mb-1">Hackathon Mode</p>
-                <p className="text-lg font-black leading-tight mb-3">Productivity Boosted</p>
-                <div className="h-1 w-full bg-white/20 rounded-full overflow-hidden">
-                    <div className="h-full bg-white w-3/4 rounded-full" />
-                </div>
-                <p className="text-[10px] mt-2 opacity-70">75% of daily goals achieved</p>
-            </div>
-        </div>
-      </aside>
+      {/* Desktop Sidebar */}
+      <Sidebar activeTab={activeTab} onTabChange={handleTabChange} stats={stats} />
+      
+      {/* Mobile Sidebar */}
+      <Sidebar 
+        activeTab={activeTab} 
+        onTabChange={handleTabChange} 
+        stats={stats} 
+        isMobile 
+        isOpen={showMobileSidebar} 
+        onClose={() => setShowMobileSidebar(false)} 
+      />
 
       <div className="flex flex-1 flex-col lg:pl-72">
-        <Navbar />
+        <Navbar onMenuClick={() => setShowMobileSidebar(true)} />
         
-        <main className="container mx-auto px-6 py-10 max-w-7xl">
+        <main className="container mx-auto px-4 py-8 sm:px-6 sm:py-10 max-w-7xl">
           {/* Dashboard Header */}
           {!searchQuery && (
-          <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="mb-8 sm:mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <motion.div 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
             >
-              <h1 className="text-4xl font-black tracking-tight text-foreground md:text-5xl">
+              <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
                 {getGreeting()}, <span className="text-primary">Creator.</span>
               </h1>
-              <p className="mt-2 text-lg text-muted-foreground">
+              <p className="mt-2 text-base sm:text-lg text-muted-foreground">
                 You have <span className="font-bold text-foreground">{stats.pending} tasks</span> remaining for today.
               </p>
             </motion.div>
@@ -295,7 +257,7 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-2 rounded-2xl bg-primary px-8 py-4 text-sm font-black text-white shadow-2xl shadow-primary/30 transition-all hover:bg-primary/90"
+                className="flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 sm:px-8 text-sm font-black text-white shadow-2xl shadow-primary/30 transition-all hover:bg-primary/90"
             >
               <Plus className="h-5 w-5" />
               Add New Task
@@ -305,7 +267,7 @@ export default function Home() {
 
           {/* Quick Stats Grid */}
           {!searchQuery && (
-          <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-10 sm:mb-12 grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <QuickStatCard label="Progress" value={`${Math.round((stats.done / (stats.total || 1)) * 100)}%`} icon={<Clock className="text-primary" />} />
               <QuickStatCard label="Tasks Done" value={stats.done} icon={<CheckCircle2 className="text-emerald-500" />} />
               <QuickStatCard label="Outstanding" value={stats.pending} icon={<CircleDashed className="text-rose-500" />} />
@@ -314,15 +276,15 @@ export default function Home() {
 
           {/* Tab Filter (Mobile) */}
           {!searchQuery && (
-          <div className="mb-8 flex gap-2 overflow-x-auto pb-2 lg:hidden">
+          <div className="mb-8 flex gap-2 overflow-x-auto pb-4 lg:hidden -mx-4 px-4 scrollbar-hide">
             {['All Tasks', 'Planned', 'Important', 'Completed'].map((f) => (
                 <button 
                     key={f}
                     onClick={() => handleTabChange(f)}
-                    className={`whitespace-nowrap rounded-full px-6 py-2 text-sm font-bold transition-all ${
+                    className={`whitespace-nowrap rounded-full px-6 py-2.5 text-sm font-bold transition-all ${
                         activeTab === f 
                         ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                        : 'bg-card text-muted-foreground hover:bg-muted'
+                        : 'bg-card text-muted-foreground hover:bg-muted border border-border/50'
                     }`}
                 >
                     {f}
@@ -348,7 +310,7 @@ export default function Home() {
             ) : (
                 <motion.div 
                     layout
-                    className="grid gap-6 md:grid-cols-2 xl:grid-cols-3"
+                    className="grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3"
                 >
                     <AnimatePresence mode='popLayout'>
                         {filteredTasks.map((task) => (
@@ -369,9 +331,9 @@ export default function Home() {
                     <motion.button 
                         layout
                         onClick={() => setShowCreateModal(true)}
-                        className="group flex min-h-[280px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-transparent transition-all hover:border-primary/50 hover:bg-primary/5"
+                        className="group flex min-h-[200px] sm:min-h-[280px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-transparent transition-all hover:border-primary/50 hover:bg-primary/5"
                     >
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground transition-all group-hover:bg-primary group-hover:text-white group-hover:rotate-90">
+                        <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground transition-all group-hover:bg-primary group-hover:text-white group-hover:rotate-90">
                             <Plus className="h-6 w-6" />
                         </div>
                         <span className="mt-4 text-sm font-bold text-muted-foreground group-hover:text-primary">Create Task</span>
@@ -380,7 +342,7 @@ export default function Home() {
             )}
 
             {!loading && filteredTasks.length === 0 && (
-                <div className="flex h-64 w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-muted/20">
+                <div className="flex h-64 w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-muted/20 px-6 text-center">
                     {searchQuery ? (
                         <>
                             <SearchX className="h-12 w-12 text-muted-foreground mb-4" />
@@ -424,31 +386,31 @@ export default function Home() {
                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                    className="relative w-full max-w-md overflow-hidden rounded-[32px] border border-rose-500/20 bg-card p-8 shadow-2xl shadow-rose-500/10"
+                    className="relative w-full max-w-md overflow-hidden rounded-[32px] border border-rose-500/20 bg-card p-6 sm:p-8 shadow-2xl shadow-rose-500/10"
                 >
                     <div className="flex flex-col items-center text-center">
-                        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-rose-500/10 text-rose-500">
-                            <AlertTriangle className="h-10 w-10" />
+                        <div className="mb-6 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-3xl bg-rose-500/10 text-rose-500">
+                            <AlertTriangle className="h-8 w-8 sm:h-10 sm:w-10" />
                         </div>
                         
-                        <h3 className="text-2xl font-black tracking-tight text-foreground">
+                        <h3 className="text-xl sm:text-2xl font-black tracking-tight text-foreground">
                             Delete Confirmation
                         </h3>
-                        <p className="mt-3 text-muted-foreground font-medium">
-                            Are you sure you want to delete <span className="text-foreground font-bold">"{taskToDelete?.title}"</span>? This action is permanent and cannot be reversed.
+                        <p className="mt-3 text-sm sm:text-base text-muted-foreground font-medium">
+                            Are you sure you want to delete <span className="text-foreground font-bold">"{taskToDelete?.title}"</span>? This action is permanent.
                         </p>
 
-                        <div className="mt-10 flex w-full flex-col gap-3 sm:flex-row">
+                        <div className="mt-8 sm:mt-10 flex w-full flex-col gap-3 sm:flex-row">
                             <button 
                                 onClick={() => setShowDeleteModal(false)}
-                                className="flex-1 rounded-2xl border border-border bg-background py-4 text-sm font-black transition-all hover:bg-muted"
+                                className="flex-1 rounded-2xl border border-border bg-background py-3.5 sm:py-4 text-sm font-black transition-all hover:bg-muted"
                             >
                                 Nevermind
                             </button>
                             <button 
                                 onClick={confirmDelete}
                                 disabled={formLoading}
-                                className="flex-[1.5] flex items-center justify-center gap-2 rounded-2xl bg-rose-500 py-4 text-sm font-black text-white shadow-xl shadow-rose-500/20 transition-all hover:bg-rose-600 hover:-translate-y-1 disabled:opacity-50"
+                                className="flex-[1.5] flex items-center justify-center gap-2 rounded-2xl bg-rose-500 py-3.5 sm:py-4 text-sm font-black text-white shadow-xl shadow-rose-500/20 transition-all hover:bg-rose-600 hover:-translate-y-1 disabled:opacity-50"
                             >
                                 {formLoading ? (
                                     <Loader2 className="h-5 w-5 animate-spin" />
@@ -464,7 +426,7 @@ export default function Home() {
 
                     <button 
                         onClick={() => setShowDeleteModal(false)}
-                        className="absolute right-6 top-6 rounded-full p-2 text-muted-foreground hover:bg-muted"
+                        className="absolute right-4 top-4 sm:right-6 sm:top-6 rounded-full p-2 text-muted-foreground hover:bg-muted"
                     >
                         <X className="h-5 w-5" />
                     </button>
@@ -474,6 +436,18 @@ export default function Home() {
       </AnimatePresence>
     </div>
   );
+}
+
+function QuickStatCard({ label, value, icon }: any) {
+    return (
+        <div className="flex flex-col rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-sm transition-all hover:shadow-md">
+            <div className="mb-3 sm:mb-4 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-muted">
+                {icon}
+            </div>
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
+            <p className="mt-1 text-2xl sm:text-3xl font-black">{value}</p>
+        </div>
+    )
 }
 
 function SidebarItem({ icon, label, active, onClick, count }: any) {
