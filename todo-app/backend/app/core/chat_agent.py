@@ -28,9 +28,9 @@ def emergency_local_fallback(session: Session, user_id: int, message: str) -> st
         status = "pending" if "pending" in msg_lower else ("completed" if "completed" in msg_lower else "all")
         tasks = tools.list_tasks(session, user_id, status)
         if not tasks: return f"You have no {status} tasks."
-        response = f"Your {status} tasks:\n"
-        for i, t in enumerate(tasks, 1):
-            response += f"{i}. {'✅' if t.status == 'completed' else '⏳'} {t.title}\n"
+        response = f"Your {status} tasks (use the ID to manage them):\n"
+        for t in tasks:
+            response += f"ID {t.id}: {'✅' if t.status == 'completed' else '⏳'} {t.title}\n"
         return response
 
     # 2. Add Task
@@ -58,19 +58,22 @@ def emergency_local_fallback(session: Session, user_id: int, message: str) -> st
     return "I'm in Emergency Mode. Try 'Add milk', 'List tasks', 'Complete milk', or 'Delete milk'."
 
 def resolve_task_indices(session: Session, user_id: int, message: str) -> str:
+    """
+    Looks for patterns like 'task 5' and ensures the AI understands it as 
+    a reference to a specific task ID.
+    """
     pattern = r"(?:task|item|number|#)\s*(\d+)"
     matches = list(re.finditer(pattern, message, re.IGNORECASE))
     if not matches: return message
-    tasks = tools.list_tasks(session, user_id, "all")
-    tasks.sort(key=lambda t: t.created_at)
+    
     new_message = message
+    # We no longer need to sort and map indices because we will use real IDs
+    # in the UI and Chatbot responses.
     for match in reversed(matches):
-        idx_str = match.group(1)
-        try:
-            idx = int(idx_str) - 1
-            if 0 <= idx < len(tasks):
-                new_message = new_message[:match.start()] + f"task {str(tasks[idx].id)}" + new_message[match.end():]
-        except: pass
+        id_str = match.group(1)
+        # We just ensure the AI sees it as 'task <ID>'
+        # The tools already accept the integer ID directly.
+        new_message = new_message[:match.start()] + f"task {id_str}" + new_message[match.end():]
     return new_message
 
 def process_chat(session: Session, user_id: int, message: str, history: List[Conversation]) -> str:
@@ -81,7 +84,7 @@ def process_chat(session: Session, user_id: int, message: str, history: List[Con
 
     def list_tasks_tool(status: str = "all"):
         """
-        List the user's tasks.
+        List the user's tasks with their PERMANENT IDs.
         
         Args:
             status: Filter tasks by status. Can be 'pending', 'completed', or 'all'. Defaults to 'all'.

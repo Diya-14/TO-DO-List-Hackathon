@@ -37,10 +37,13 @@ export function TaskCard({ id, title, description, status, priority, due_date, t
     >
       {/* Header */}
       <div className="mb-4 flex items-start justify-between">
-        <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${priorityStyles[priority]}`}>
-          <span className="h-1.5 w-1.5 rounded-full bg-current" />
-          {priority}
-        </span>
+        <div className="flex items-center gap-2">
+            <span className="text-[10px] font-black text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">#{id}</span>
+            <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${priorityStyles[priority]}`}>
+            <span className="h-1.5 w-1.5 rounded-full bg-current" />
+            {priority}
+            </span>
+        </div>
         
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button 
